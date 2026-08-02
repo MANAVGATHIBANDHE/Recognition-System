@@ -1,106 +1,82 @@
 """
 Main Window
-
-Project:
-    Recognition System
+Recognition System
 """
-
-from __future__ import annotations
 
 import customtkinter as ctk
 
-from config.application import ApplicationConfig
+from ui.widgets.dashboard import Dashboard
 
 
 class MainWindow(ctk.CTk):
-    """Main desktop application window."""
 
-    def __init__(self) -> None:
+    def __init__(self):
         super().__init__()
 
-        self.initialize_window()
+        self.title("Recognition System")
+        self.geometry("1200x700")
 
-    def initialize_window(self) -> None:
+        ctk.set_appearance_mode("Dark")
+        ctk.set_default_color_theme("blue")
 
-        self.title(
-            f"{ApplicationConfig.NAME} {ApplicationConfig.VERSION}"
-        )
+        self.build_layout()
 
-        self.geometry(
-            f"{ApplicationConfig.WINDOW_WIDTH}x{ApplicationConfig.WINDOW_HEIGHT}"
-        )
+    def build_layout(self):
 
-        self.minsize(
-            ApplicationConfig.MIN_WIDTH,
-            ApplicationConfig.MIN_HEIGHT,
-        )
-
-        self.create_layout()
-
-    def create_layout(self) -> None:
-
-        self.grid_columnconfigure(1, weight=1)
-        self.grid_rowconfigure(0, weight=1)
-
-        sidebar = ctk.CTkFrame(
+        self.sidebar = ctk.CTkFrame(
             self,
-            width=250,
-            corner_radius=0,
+            width=220,
+            corner_radius=0
         )
 
-        sidebar.grid(
-            row=0,
-            column=0,
-            sticky="ns"
+        self.sidebar.pack(
+            side="left",
+            fill="y"
         )
 
-        title = ctk.CTkLabel(
-            sidebar,
+        logo = ctk.CTkLabel(
+            self.sidebar,
             text="Recognition\nSystem",
-            font=("Segoe UI", 24, "bold"),
+            font=("Segoe UI", 24, "bold")
         )
 
-        title.pack(pady=30)
+        logo.pack(pady=30)
 
         buttons = [
             "Dashboard",
-            "Face Recognition",
-            "Object Detection",
-            "Voice Recognition",
+            "Camera",
+            "Face",
+            "Object",
+            "Voice",
             "OCR",
-            "Events",
-            "Settings",
+            "Settings"
         ]
 
-        for item in buttons:
-            button = ctk.CTkButton(
-                sidebar,
-                text=item,
-                height=40,
+        for name in buttons:
+
+            btn = ctk.CTkButton(
+                self.sidebar,
+                text=name,
+                width=180
             )
 
-            button.pack(
-                padx=15,
-                pady=6,
-                fill="x",
-            )
+            btn.pack(pady=8)
 
-        self.content = ctk.CTkFrame(self)
-
-        self.content.grid(
-            row=0,
-            column=1,
-            sticky="nsew",
+        self.content = ctk.CTkFrame(
+            self
         )
 
-        welcome = ctk.CTkLabel(
-            self.content,
-            text="Recognition System\nDesktop Platform",
-            font=("Segoe UI", 30, "bold"),
+        self.content.pack(
+            side="left",
+            fill="both",
+            expand=True
         )
 
-        welcome.place(
-            relx=0.5,
-            rely=0.5,
-            anchor="center",
+        dashboard = Dashboard(self.content)
+
+        dashboard.pack(
+            fill="both",
+            expand=True,
+            padx=20,
+            pady=20
         )
