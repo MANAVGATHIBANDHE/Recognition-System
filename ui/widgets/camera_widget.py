@@ -3,6 +3,7 @@ import cv2
 from PIL import Image, ImageTk
 
 from services.camera.manager import camera_service
+from services.face.service import face_ai
 # from services.face.service import FaceService
 
 # face_ai = FaceService()
@@ -20,6 +21,34 @@ class CameraWidget(ctk.CTkLabel):
         if camera_service.camera.cap is not None:
 
             ok, frame = camera_service.camera.read()
+            frame = cv2.convertScaleAbs(frame, alpha=1.5, beta=40)
+            faces = face_ai.detector.detect(frame)
+
+            if faces is not None:
+
+                for face in faces:
+
+                    x, y, w, h = face[:4].astype(int)
+
+                    cv2.rectangle(
+                        frame,
+                        (x, y),
+                        (x + w, y + h),
+                        (0, 255, 0),
+                        2
+                    )
+
+                    score = face[-1]
+
+                    cv2.putText(
+                        frame,
+                        f"{score:.2f}",
+                        (x, y - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        0.7,
+                        (0,255,0),
+                        2
+                    )
             # frame = face_ai.detector.detect(frame)
 
             if ok:

@@ -1,19 +1,19 @@
-from core.base_service import BaseService
-from core.logger.logger import app_logger
+"""
+Face Service
+"""
 
-from services.face.face_detector import FaceDetector
+from services.face.yunet_detector import YuNetDetector
+from services.face.embedding import FaceEmbedding
+from services.face.face_database import FaceDatabase
 
 
-class FaceService(BaseService):
+class FaceService:
 
     def __init__(self):
 
-        super().__init__("face")
+        self.detector = YuNetDetector()
+        self.embedding = FaceEmbedding()
+        self.database = FaceDatabase()
 
-        self.detector = FaceDetector()
 
-    def start(self):
-        app_logger.success("Face AI Ready")
-
-    def stop(self):
-        app_logger.info("Face AI Stopped")
+face_ai = FaceService()

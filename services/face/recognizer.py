@@ -1,14 +1,22 @@
-from core.base_service import BaseService
-from core.logger.logger import app_logger
+from insightface.app import FaceAnalysis
 
 
-class FaceRecognizer(BaseService):
+class FaceRecognizer:
 
     def __init__(self):
-        super().__init__("face_recognizer")
+
+        self.app = FaceAnalysis(
+            name="buffalo_l",
+            root="models"
+        )
+
+        self.app.prepare(
+            ctx_id=0,
+            det_size=(640, 640)
+        )
 
     def start(self):
-        app_logger.info("Face Recognizer Running")
+        print("Face Recognizer Running")
 
-    def stop(self):
-        app_logger.info("Face Recognizer Stopped")
+    def recognize(self, frame):
+        return self.app.get(frame)
