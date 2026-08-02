@@ -6,6 +6,7 @@ Recognition System
 import customtkinter as ctk
 
 from ui.widgets.dashboard import Dashboard
+from ui.widgets.camera_widget import CameraWidget
 
 
 class MainWindow(ctk.CTk):
@@ -72,11 +73,17 @@ class MainWindow(ctk.CTk):
             expand=True
         )
 
-        dashboard = Dashboard(self.content)
+        self.dashboard = Dashboard(self.content)
 
-        dashboard.pack(
+        self.dashboard.pack(
             fill="both",
             expand=True,
             padx=20,
+            pady=20
+        )
+
+        self.camera_widget = CameraWidget(self.dashboard)
+
+        self.camera_widget.pack(
             pady=20
         )

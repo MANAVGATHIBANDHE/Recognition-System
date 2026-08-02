@@ -11,6 +11,7 @@ from ui.windows.main_window import MainWindow
 
 from core.service_manager import ServiceManager
 from services.camera.manager import camera_service
+from services.face.manager import face_service
 
 
 class Application:
@@ -44,6 +45,10 @@ class Application:
         self.service_manager.register(camera_service)
 
         self.service_manager.start("camera")
+
+        self.service_manager.register(face_service)
+
+        self.service_manager.start("face")
 
         app_logger.success("Recognition System Ready")
 
