@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Development Plan</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family: "Courier New", Courier, monospace;
+        margin: 0;
+        padding: 0;
+        background: #000;
+        color: #3f3f3f;
+      }
+      .title {
+        position: sticky;
+        background-color: none;
+        top: 0;
+        padding: 30px;
+        text-align: center;
+        color: #ffffff;
+        background-color: #000;
+      }
+      .cross i {
+        z-index: 3;
+        position: fixed;
+        top: 25px;
+        right: 20px;
+        font-size: 30px;
+        cursor: pointer;
+        color: #999999;
+      }
+      .cross i:hover {
+        color: #ffffff;
+      }
+      .container {
+        width: 100%;
+        margin: 0 auto;
+        margin-top: 10px;
+        padding: 20px;
+        font-size: 16px;
+        display: flex;
+        justify-content: center;
+        line-height: 2;
+      }
+      span#darkGrey,
+      #darkGrey {
+        color: #999999;
+        text-decoration: dashed underline #3f3f3f 3px;
+      }
+      footer {
+        text-align: center;
+        padding: 10px;
+        bottom: 0;
+        position: relative;
+        text-decoration: none;
+      }
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="cross" onclick="history.go(-1) || window.close()">
+      <i class="fa-regular fa-circle-xmark"></i>
+    </div>
+    <h1 class="title">
+      Recognition System
+      <hr />
+    </h1>
+
+    <div class="container">
+      <pre>
+        <span id="darkGrey">Development Plan</span>
+
+        We'll build it like a real software company.
+
+        <span id="darkGrey"># Sprint 1 – Foundation</span>
+            - Project structure
+            - Virtual environment
+            - Dependencies
+            - Configuration
+            - Logging
+            - SQLite
+            - Git repository
+
+        <span id="darkGrey"># Sprint 2 – Desktop UI</span>
+            - Main window
+            - Navigation
+            - Live camera
+            - Status bar
+            - Settings
+            - Responsive layout
+
+        <span id="darkGrey"># Sprint 3 – Vision</span>
+            - Face detection
+            - Face recognition (InsightFace)
+            - Object detection (YOLO)
+            - Tracking
+
+        <span id="darkGrey"># Sprint 4 – Audio</span>
+            - Speech recognition
+            - Text-to-speech
+            - Speaker recognition
+            - Wake word
+
+        <span id="darkGrey"># Sprint 5 – Memory</span>
+            - Face database
+            - Voice database
+            - Object database
+            - Event history
+
+        <span id="darkGrey"># Sprint 6 – AI Layer</span>
+            - Natural language queries
+            - Search
+            - Smart reports
+
+        <span id="darkGrey"># Sprint 7 – Packaging</span>
+            - Windows installer
+            - .exe build
+            - Auto-updater
+            - Documentation
+    </pre>
+    </div>
+    <footer>
+      <p id="darkGrey">&copy; 2024 Development Plan. All rights reserved.</p>
+    </footer>
+  </body>
+</html>
