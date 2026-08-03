@@ -1,17 +1,16 @@
 """
 Dashboard Widget
-Recognition System v1.0
+Recognition System v2.0
 """
 
 from datetime import datetime
 
 import customtkinter as ctk
 
+from services.face.face_database import face_database
+
 
 class Dashboard(ctk.CTkFrame):
-    """
-    Dashboard Screen
-    """
 
     def __init__(self, master):
         super().__init__(master)
@@ -19,7 +18,9 @@ class Dashboard(ctk.CTkFrame):
         self.start_time = datetime.now()
 
         self.build_ui()
+
         self.update_clock()
+        self.update_dashboard()
 
     def build_ui(self):
 
@@ -46,7 +47,7 @@ class Dashboard(ctk.CTkFrame):
 
         self.ai_label = ctk.CTkLabel(
             self,
-            text="🧠 AI : Not Loaded",
+            text="🧠 AI : Face Recognition Loaded",
             font=("Segoe UI", 16)
         )
         self.ai_label.pack(anchor="w", padx=30, pady=5)
@@ -72,12 +73,50 @@ class Dashboard(ctk.CTkFrame):
         )
         self.object_label.pack(anchor="w", padx=30, pady=5)
 
+        self.recognition_label = ctk.CTkLabel(
+            self,
+            text="👤 Last Recognition : None",
+            font=("Segoe UI", 16)
+        )
+        self.recognition_label.pack(anchor="w", padx=30, pady=5)
+
+        self.confidence_label = ctk.CTkLabel(
+            self,
+            text="🎯 Confidence : 0%",
+            font=("Segoe UI", 16)
+        )
+        self.confidence_label.pack(anchor="w", padx=30, pady=5)
+
         self.uptime = ctk.CTkLabel(
             self,
             text="Uptime : 00:00:00",
             font=("Segoe UI", 16, "bold")
         )
         self.uptime.pack(pady=30)
+
+    def update_dashboard(self):
+
+        try:
+            faces = face_database.get_faces()
+
+            self.face_label.configure(
+                text=f"🙂 Face Profiles : {len(faces)}"
+            )
+
+        except Exception:
+            pass
+
+        self.after(2000, self.update_dashboard)
+
+    def set_recognition(self, name, score):
+
+        self.recognition_label.configure(
+            text=f"👤 Last Recognition : {name}"
+        )
+
+        self.confidence_label.configure(
+            text=f"🎯 Confidence : {score*100:.1f}%"
+        )
 
     def update_clock(self):
 

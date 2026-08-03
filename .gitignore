@@ -194,3 +194,9 @@ data/.gitkeep
 logs/.gitkeep
 resources/.gitkeep
 storage/.gitkeep
+
+# AI Models
+models/models/
+models/**/*.onnx
+models/**/*.zip
+storage/photos/
