@@ -19,13 +19,6 @@ class PersonDialog(ctk.CTkToplevel):
         self.face_image = face_image
         self.embedding = embedding
 
-        print("=" * 50)
-
-        if embedding is not None:
-            print(embedding.shape)
-
-        print("=" * 50)
-
         self.build_ui()
 
     def build_ui(self):
@@ -109,16 +102,6 @@ class PersonDialog(ctk.CTkToplevel):
             photo = image_service.save_profile(
                 self.face_image
             )
-
-        if self.embedding is not None:
-            print(self.embedding.shape)
-
-        print("=" * 50)
-
-        if self.embedding is not None:
-            print(self.embedding.shape)
-
-        print("=" * 50)
 
         person_service.create_person(
 

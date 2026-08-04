@@ -42,11 +42,6 @@ class PersonService:
         if embedding is not None:
             embedding = embedding.tobytes()
 
-        if embedding is None:
-            print("Embedding : NONE")
-
-        print("=" * 60)
-
         person_database.cursor.execute(
             """
             INSERT INTO persons(

@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from ui.dialogs.person_dialog import PersonDialog
 from PIL import Image
+from core.logger.logger import app_logger
 
 class UnknownPersonDialog(ctk.CTkToplevel):
 
@@ -78,7 +79,6 @@ class UnknownPersonDialog(ctk.CTkToplevel):
         self.destroy()
 
     def maybe_later(self):
-
-        print("Queued for later registration")
+        app_logger.info("Unknown person registration postponed")
 
         self.destroy()

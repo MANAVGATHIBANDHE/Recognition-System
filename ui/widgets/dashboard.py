@@ -7,8 +7,7 @@ from datetime import datetime
 
 import customtkinter as ctk
 
-from services.face.face_database import face_database
-
+from services.person.person_database import person_database
 
 class Dashboard(ctk.CTkFrame):
 
@@ -97,10 +96,10 @@ class Dashboard(ctk.CTkFrame):
     def update_dashboard(self):
 
         try:
-            faces = face_database.get_faces()
+            persons = person_database.get_all_persons()
 
             self.face_label.configure(
-                text=f"🙂 Face Profiles : {len(faces)}"
+                text=f"🙂 Face Profiles : {len(persons)}"
             )
 
         except Exception:

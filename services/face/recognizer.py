@@ -3,6 +3,7 @@ import numpy as np
 from scipy.spatial.distance import cosine
 from insightface.app import FaceAnalysis
 from services.person.person_database import person_database
+from core.logger.logger import app_logger
 
 
 class FaceRecognizer:
@@ -24,7 +25,7 @@ class FaceRecognizer:
         self.reload()
 
     def start(self):
-        print("Face Recognizer Running")
+        app_logger.info("Face Recognizer Running")
 
     def recognize(self, frame):
         return self.app.get(frame)
@@ -70,11 +71,6 @@ class FaceRecognizer:
     def reload(self):
 
         self.persons = person_database.get_all_embeddings()
-
-        for name, embedding in self.persons:
-            print(name, embedding is not None)
-
-        print("=" * 60)
 
 
 face_recognizer = FaceRecognizer()

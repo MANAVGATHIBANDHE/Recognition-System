@@ -4,7 +4,7 @@ Recognition System
 """
 
 import customtkinter as ctk
-
+from core.logger.logger import app_logger
 from ui.widgets.dashboard import Dashboard
 from ui.widgets.camera_widget import CameraWidget
 from ui.widgets.face_gallery import FaceGallery
@@ -29,7 +29,6 @@ class MainWindow(ctk.CTk):
         self.build_layout()
 
     def check_unknown(self, name):
-        print("=" * 40)
 
         if unknown_watcher.update(name):
 
@@ -117,41 +116,18 @@ class MainWindow(ctk.CTk):
 
         self.face_gallery = FaceGallery(self.content)
 
-        # self.register_btn = ctk.CTkButton(
-        #     self.content,
-        #     text="Register My Face",
-        #     command=self.register_face
-        # )
-
-        # self.register_btn.pack(pady=10)
-
     def register_face(self):
 
         frame = getattr(self.camera_widget, "current_frame", None)
         face_crop = getattr(self.camera_widget, "last_face_crop", None)
         embedding = getattr(self.camera_widget, "current_embedding", None)
 
-        if embedding is not None:
-            print(embedding.shape)
-
-        print("=" * 50)
-
 
         if frame is None:
-            print("No current frame available")
+            app_logger.warning("No camera frame available.")
             return
 
         try:
-
-            print("=" * 50)
-
-            print(embedding)
-
-            if embedding is not None:
-                print(embedding.shape)
-
-            print("=" * 50)
-
             dialog = PersonDialog(self, face_image=face_crop, embedding=embedding)
 
             self.wait_window(dialog)
@@ -159,10 +135,7 @@ class MainWindow(ctk.CTk):
             self.face_gallery.refresh()
 
         except Exception as e:
-            print("ERROR:", e)
-
-    # def register_face_event(self, event):
-    #     self.register_face()
+            app_logger.exception(e)
 
     def change_page(self, page):
 
