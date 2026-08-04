@@ -6,22 +6,17 @@ from version import APP_NAME, VERSION, BUILD
 
 
 class ApplicationConfig:
-    NAME = APP_NAME
+    NAME: str = APP_NAME
+    VERSION: str = VERSION
+    BUILD: str = BUILD
 
-    VERSION = VERSION
+    DEBUG: bool = False
 
-    BUILD = BUILD
+    COMPANY: str = "Recognition System"
+    ORGANIZATION: str = "Recognition AI"
 
-    DEBUG = True
+    WINDOW_WIDTH: int = 1400
+    WINDOW_HEIGHT: int = 850
 
-    COMPANY = "Recognition System"
-
-    ORGANIZATION = "Recognition AI"
-
-    WINDOW_WIDTH = 1400
-
-    WINDOW_HEIGHT = 850
-
-    MIN_WIDTH = 1200
-
-    MIN_HEIGHT = 700
+    MIN_WIDTH: int = 1200
+    MIN_HEIGHT: int = 700
