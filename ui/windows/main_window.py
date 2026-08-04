@@ -3,12 +3,10 @@ Main Window
 Recognition System
 """
 
-# from core.camera import frame
 import customtkinter as ctk
 
 from ui.widgets.dashboard import Dashboard
 from ui.widgets.camera_widget import CameraWidget
-# from services.camera.manager import camera_service
 from ui.widgets.face_gallery import FaceGallery
 from ui.dialogs.person_dialog import PersonDialog
 from services.watcher.unknown_watcher import unknown_watcher
@@ -29,10 +27,9 @@ class MainWindow(ctk.CTk):
         self.unknown_popup = None
 
         self.build_layout()
-        # self.bind_all("<KeyPress-r>", self.register_face_event)
-        # self.bind_all("<KeyPress-R>", self.register_face_event)
 
     def check_unknown(self, name):
+        print("=" * 40)
 
         if unknown_watcher.update(name):
 
@@ -130,15 +127,9 @@ class MainWindow(ctk.CTk):
 
     def register_face(self):
 
-        print("Register button/key pressed")
-
         frame = getattr(self.camera_widget, "current_frame", None)
         face_crop = getattr(self.camera_widget, "last_face_crop", None)
         embedding = getattr(self.camera_widget, "current_embedding", None)
-        print("Embedding passed to dialog:", embedding is not None)
-        print("=" * 50)
-        print("MAIN WINDOW")
-        print("Embedding:", embedding is not None)
 
         if embedding is not None:
             print(embedding.shape)
@@ -152,15 +143,9 @@ class MainWindow(ctk.CTk):
 
         try:
 
-            print("Sending frame to trainer...")
-
             print("=" * 50)
 
-            print("Embedding object:")
-
             print(embedding)
-
-            print(type(embedding))
 
             if embedding is not None:
                 print(embedding.shape)

@@ -31,6 +31,4 @@ class YuNetDetector:
 
         retval, faces = self.detector.detect(frame)
 
-        print("Faces:", faces)
-
         return faces

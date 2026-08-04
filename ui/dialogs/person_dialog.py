@@ -18,11 +18,8 @@ class PersonDialog(ctk.CTkToplevel):
 
         self.face_image = face_image
         self.embedding = embedding
-        print("Dialog embedding:", self.embedding is not None)
 
         print("=" * 50)
-        print("PERSON DIALOG")
-        print("Embedding:", self.embedding is not None)
 
         if embedding is not None:
             print(embedding.shape)
@@ -113,14 +110,10 @@ class PersonDialog(ctk.CTkToplevel):
                 self.face_image
             )
 
-        print("Saving embedding:", self.embedding is not None)
-
         if self.embedding is not None:
             print(self.embedding.shape)
 
         print("=" * 50)
-        print("SAVE CLICKED")
-        print("Embedding exists:", self.embedding is not None)
 
         if self.embedding is not None:
             print(self.embedding.shape)
@@ -169,11 +162,6 @@ class PersonDialog(ctk.CTkToplevel):
 
         )
 
-        print("Waiting before reload...")
-        print("Reloading recognizer...")
-
         face_ai.recognizer.reload()
-
-        print("✅ Person Saved")
 
         self.destroy()

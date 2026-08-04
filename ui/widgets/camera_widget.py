@@ -6,7 +6,6 @@ from services.camera.manager import camera_service
 from services.face.service import face_ai
 from services.image.face_cropper import FaceCropper
 
-# face_ai = FaceService()
 
 
 class CameraWidget(ctk.CTkLabel):
@@ -43,13 +42,7 @@ class CameraWidget(ctk.CTkLabel):
             self.current_embedding = None
 
             if len(results):
-
                 self.current_embedding = results[0].embedding
-
-                print(
-                    "Embedding captured:",
-                    self.current_embedding.shape
-                )
             else:
                 self.current_embedding = None
 

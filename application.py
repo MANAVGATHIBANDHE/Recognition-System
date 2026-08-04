@@ -11,7 +11,7 @@ from ui.windows.main_window import MainWindow
 
 from core.service_manager import ServiceManager
 from services.camera.manager import camera_service
-from services.face.manager import face_service
+from services.face.service import face_ai
 
 
 class Application:
@@ -46,7 +46,7 @@ class Application:
 
         self.service_manager.start("camera")
 
-        self.service_manager.register(face_service)
+        self.service_manager.register(face_ai)
 
         self.service_manager.start("face")
 

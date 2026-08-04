@@ -42,14 +42,8 @@ class PersonService:
         if embedding is not None:
             embedding = embedding.tobytes()
 
-        print("=" * 60)
-        print("Saving Person")
-        print("Full Name :", full_name)
-
         if embedding is None:
             print("Embedding : NONE")
-        else:
-            print("Embedding bytes :", len(embedding))
 
         print("=" * 60)
 
@@ -109,8 +103,6 @@ class PersonService:
         )
 
         person_database.connection.commit()
-
-        print("Database Commit Complete")
 
 
 person_service = PersonService()

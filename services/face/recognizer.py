@@ -2,8 +2,6 @@ import numpy as np
 
 from scipy.spatial.distance import cosine
 from insightface.app import FaceAnalysis
-
-# from services.face.face_database import face_database
 from services.person.person_database import person_database
 
 
@@ -71,12 +69,7 @@ class FaceRecognizer:
 
     def reload(self):
 
-        print("=" * 60)
-        print("Reloading Face Database")
-
         self.persons = person_database.get_all_embeddings()
-
-        print("Loaded:", len(self.persons))
 
         for name, embedding in self.persons:
             print(name, embedding is not None)
