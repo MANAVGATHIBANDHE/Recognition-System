@@ -3,14 +3,16 @@ Main Window
 Recognition System
 """
 
-from core.camera import frame
+# from core.camera import frame
 import customtkinter as ctk
 
 from ui.widgets.dashboard import Dashboard
 from ui.widgets.camera_widget import CameraWidget
-from services.face.trainer import face_trainer
-from services.camera.manager import camera_service
+# from services.camera.manager import camera_service
 from ui.widgets.face_gallery import FaceGallery
+from ui.dialogs.person_dialog import PersonDialog
+from services.watcher.unknown_watcher import unknown_watcher
+from ui.dialogs.unknown_person_dialog import UnknownPersonDialog
 
 
 class MainWindow(ctk.CTk):
@@ -24,9 +26,19 @@ class MainWindow(ctk.CTk):
         ctk.set_appearance_mode("Dark")
         ctk.set_default_color_theme("blue")
 
+        self.unknown_popup = None
+
         self.build_layout()
-        self.bind_all("<KeyPress-r>", self.register_face_event)
-        self.bind_all("<KeyPress-R>", self.register_face_event)
+        # self.bind_all("<KeyPress-r>", self.register_face_event)
+        # self.bind_all("<KeyPress-R>", self.register_face_event)
+
+    def check_unknown(self, name):
+
+        if unknown_watcher.update(name):
+
+            if self.unknown_popup is None or not self.unknown_popup.winfo_exists():
+
+                self.unknown_popup = UnknownPersonDialog(self, self.camera_widget.last_face_crop)
 
     def build_layout(self):
 
@@ -96,6 +108,16 @@ class MainWindow(ctk.CTk):
             pady=20
         )
 
+        self.register_button = ctk.CTkButton(
+            self.dashboard,
+            text="➕ Register Person",
+            width=220,
+            height=38,
+            command=self.register_face
+        )
+
+        self.register_button.pack(pady=(5, 15))
+
         self.face_gallery = FaceGallery(self.content)
 
         # self.register_btn = ctk.CTkButton(
@@ -111,6 +133,18 @@ class MainWindow(ctk.CTk):
         print("Register button/key pressed")
 
         frame = getattr(self.camera_widget, "current_frame", None)
+        face_crop = getattr(self.camera_widget, "last_face_crop", None)
+        embedding = getattr(self.camera_widget, "current_embedding", None)
+        print("Embedding passed to dialog:", embedding is not None)
+        print("=" * 50)
+        print("MAIN WINDOW")
+        print("Embedding:", embedding is not None)
+
+        if embedding is not None:
+            print(embedding.shape)
+
+        print("=" * 50)
+
 
         if frame is None:
             print("No current frame available")
@@ -120,19 +154,30 @@ class MainWindow(ctk.CTk):
 
             print("Sending frame to trainer...")
 
-            success = face_trainer.register(frame, "Manav")
+            print("=" * 50)
 
-            if success:
-                self.face_gallery.refresh()
-                print("✅ Manav Registered Successfully")
-            else:
-                print("❌ No face found")
+            print("Embedding object:")
+
+            print(embedding)
+
+            print(type(embedding))
+
+            if embedding is not None:
+                print(embedding.shape)
+
+            print("=" * 50)
+
+            dialog = PersonDialog(self, face_image=face_crop, embedding=embedding)
+
+            self.wait_window(dialog)
+
+            self.face_gallery.refresh()
 
         except Exception as e:
             print("ERROR:", e)
 
-    def register_face_event(self, event):
-        self.register_face()
+    # def register_face_event(self, event):
+    #     self.register_face()
 
     def change_page(self, page):
 

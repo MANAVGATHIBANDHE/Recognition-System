@@ -23,6 +23,7 @@ class PersonService:
         occupation,
         relationship,
         tags,
+        notes,
         photo,
         embedding
     ):
@@ -37,6 +38,20 @@ class PersonService:
                 ]
             )
         )
+
+        if embedding is not None:
+            embedding = embedding.tobytes()
+
+        print("=" * 60)
+        print("Saving Person")
+        print("Full Name :", full_name)
+
+        if embedding is None:
+            print("Embedding : NONE")
+        else:
+            print("Embedding bytes :", len(embedding))
+
+        print("=" * 60)
 
         person_database.cursor.execute(
             """
@@ -59,12 +74,13 @@ class PersonService:
                 occupation,
                 relationship,
                 tags,
+                notes,
                 photo,
                 embedding
             )
             VALUES(
                 ?,?,?,?,?,?,?,?,?,?,
-                ?,?,?,?,?,?,?,?,?,?
+                ?,?,?,?,?,?,?,?,?,?,?
             )
             """,
             (
@@ -86,12 +102,15 @@ class PersonService:
                 occupation,
                 relationship,
                 tags,
+                notes,
                 photo,
                 embedding
             )
         )
 
         person_database.connection.commit()
+
+        print("Database Commit Complete")
 
 
 person_service = PersonService()

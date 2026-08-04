@@ -1,8 +1,8 @@
 import os
 import customtkinter as ctk
 from PIL import Image
-
-from services.face.face_database import face_database
+from services.person.person_database import person_database
+from services.face.service import face_ai
 
 
 class FaceGallery(ctk.CTkScrollableFrame):
@@ -17,7 +17,7 @@ class FaceGallery(ctk.CTkScrollableFrame):
         for widget in self.winfo_children():
             widget.destroy()
 
-        faces = face_database.get_faces()
+        faces = person_database.get_all_persons()
 
         if len(faces) == 0:
 
@@ -32,11 +32,10 @@ class FaceGallery(ctk.CTkScrollableFrame):
         for row in faces:
 
             name = row[0]
-
-            image_path = None
-
-            if len(row) >= 2:
-                image_path = row[1]
+            image_path = row[1]
+            relationship = row[2]
+            count = row[3]
+            created = row[4]
 
             card = ctk.CTkFrame(self)
 
@@ -100,7 +99,7 @@ class FaceGallery(ctk.CTkScrollableFrame):
 
             ctk.CTkLabel(
                 right,
-                text="Registered Face",
+                text= f"{relationship}\nRecognized : {count} times\nRegistered : {created}",
                 text_color="gray"
             ).pack(anchor="w")
 
@@ -116,6 +115,8 @@ class FaceGallery(ctk.CTkScrollableFrame):
 
     def delete_face(self,name):
 
-        face_database.delete_face(name)
+        person_database.delete_person(name)
+
+        face_ai.recognizer.reload()
 
         self.refresh()

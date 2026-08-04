@@ -1,6 +1,6 @@
 from services.face.detector import FaceDetector
 from services.face.recognizer import FaceRecognizer
-from services.face.trainer import FaceTrainer
+from services.face.trainer_old import FaceTrainer
 
 
 class FaceManager:

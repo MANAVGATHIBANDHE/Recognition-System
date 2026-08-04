@@ -4,8 +4,7 @@ from PIL import Image, ImageTk
 
 from services.camera.manager import camera_service
 from services.face.service import face_ai
-from services.face.trainer import face_trainer
-# from services.face.service import FaceService
+from services.image.face_cropper import FaceCropper
 
 # face_ai = FaceService()
 
@@ -16,9 +15,7 @@ class CameraWidget(ctk.CTkLabel):
         super().__init__(parent, text="")
 
         self.current_frame = None
-
-        self.bind("<KeyPress-r>", self.register_face)
-        self.focus_set()
+        self.current_embedding = None
 
         self.after(30, self.update_frame)
 
@@ -39,22 +36,50 @@ class CameraWidget(ctk.CTkLabel):
                 frame = cv2.convertScaleAbs(frame, alpha=1.5, beta=40)
 
             faces = face_ai.detector.detect(frame)
+            self.last_face_crop = None
+
+            results = face_ai.recognizer.recognize(frame)
+
+            self.current_embedding = None
+
+            if len(results):
+
+                self.current_embedding = results[0].embedding
+
+                print(
+                    "Embedding captured:",
+                    self.current_embedding.shape
+                )
+            else:
+                self.current_embedding = None
 
             if faces is not None:
 
-                for face in faces:
-                    results = face_ai.recognizer.recognize(frame)
+                for index, face in enumerate(faces):
+                    self.last_face_crop = FaceCropper.crop(
+                        frame,
+                        face
+                    )
 
-                    if len(results):
+                    if index < len(results):
+
+                        embedding = results[index].embedding
 
                         name, score = face_ai.recognizer.identify(
-                            results[0].embedding
+                            embedding
                         )
 
                     else:
 
                         name = "Unknown"
                         score = 0
+
+
+                    window = self.winfo_toplevel()
+
+                    if hasattr(window, "check_unknown"):
+                        window.check_unknown(name)
+
 
                     x, y, w, h = face[:4].astype(int)
 
@@ -72,10 +97,9 @@ class CameraWidget(ctk.CTkLabel):
                         (x, y - 10),
                         cv2.FONT_HERSHEY_SIMPLEX,
                         0.7,
-                        (0,255,0),
+                        (0, 255, 0),
                         2
                     )
-            # frame = face_ai.detector.detect(frame)
 
             if ok:
 
@@ -92,20 +116,3 @@ class CameraWidget(ctk.CTkLabel):
                 self.image = photo
 
         self.after(30, self.update_frame)
-
-    def register_face(self, event=None):
-
-        print("R pressed")
-
-        frame = self.current_frame
-
-        if frame is None:
-            print("No current frame")
-            return
-
-        success = face_trainer.register(frame, "Manav")
-
-        if success:
-            print("✅ Manav Registered")
-        else:
-            print("❌ Face not detected")

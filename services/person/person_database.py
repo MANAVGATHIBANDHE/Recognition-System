@@ -45,6 +45,8 @@ class PersonDatabase:
 
             tags TEXT,
 
+            notes TEXT,
+
             photo TEXT,
 
             embedding BLOB,
@@ -58,6 +60,38 @@ class PersonDatabase:
             status TEXT DEFAULT 'Active'
         )
         """)
+
+        self.connection.commit()
+
+    def get_all_embeddings(self):
+
+        self.cursor.execute(
+            """SELECT full_name, embedding FROM persons WHERE embedding IS NOT NULL"""
+        )
+
+        return self.cursor.fetchall()
+
+    def get_all_persons(self):
+
+        self.cursor.execute("""
+            SELECT
+                full_name,
+                photo,
+                relationship,
+                recognition_count,
+                created_at
+            FROM persons
+            ORDER BY id DESC
+        """)
+
+        return self.cursor.fetchall()
+
+    def delete_person(self, name):
+
+        self.cursor.execute(
+            """DELETE FROM persons WHERE full_name=?""",
+            (name,)
+        )
 
         self.connection.commit()
 

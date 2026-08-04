@@ -29,7 +29,7 @@ class Dashboard(ctk.CTkFrame):
             text="Recognition Dashboard",
             font=("Segoe UI", 24, "bold")
         )
-        title.pack(pady=(20, 30))
+        title.pack(pady=(15, 10))
 
         self.camera_label = ctk.CTkLabel(
             self,
@@ -92,7 +92,7 @@ class Dashboard(ctk.CTkFrame):
             text="Uptime : 00:00:00",
             font=("Segoe UI", 16, "bold")
         )
-        self.uptime.pack(pady=30)
+        self.uptime.pack(pady=(10, 15))
 
     def update_dashboard(self):
 
