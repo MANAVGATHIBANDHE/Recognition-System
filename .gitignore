@@ -200,3 +200,23 @@ models/models/
 models/**/*.onnx
 models/**/*.zip
 storage/photos/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Database
+storage/sqlite/*.db
+
+# User profile images
+storage/profiles/*
+
+# Keep folder
+!storage/profiles/.gitkeep
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
