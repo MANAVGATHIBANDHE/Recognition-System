@@ -1,222 +1,116 @@
 # ==========================================================
 # Recognition System
-# Professional .gitignore
 # ==========================================================
 
-# ----------------------------------------------------------
 # Python
-# ----------------------------------------------------------
 __pycache__/
 *.py[cod]
-*$py.class
 *.pyo
 *.pyd
 *.so
 
-# ----------------------------------------------------------
-# Virtual Environment
-# ----------------------------------------------------------
+# Virtual Environments
 .venv/
 venv/
 env/
 ENV/
 
-# ----------------------------------------------------------
 # IDE
-# ----------------------------------------------------------
 .vscode/
 .idea/
 
-# ----------------------------------------------------------
-# Environment Variables
-# ----------------------------------------------------------
+# Environment
 .env
 .env.*
 !.env.example
 
-# ----------------------------------------------------------
 # Logs
-# ----------------------------------------------------------
 logs/
 *.log
 
-# ----------------------------------------------------------
-# SQLite Databases
-# ----------------------------------------------------------
+# Databases
 *.db
 *.sqlite
 *.sqlite3
-
-# Keep folder structure
+storage/sqlite/*.db
 !storage/sqlite/.gitkeep
 
-# ----------------------------------------------------------
+# Build
+build/
+dist/
+*.spec
+__pyinstaller__/
+
 # Cache
-# ----------------------------------------------------------
 .cache/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 coverage/
-
-# ----------------------------------------------------------
-# Testing
-# ----------------------------------------------------------
 .coverage
 htmlcov/
-.pytest_cache/
 
-# ----------------------------------------------------------
-# Build
-# ----------------------------------------------------------
-build/
-dist/
-*.spec
+# Temporary
+*.tmp
+*.temp
+*.bak
+*.swp
 
-# ----------------------------------------------------------
-# PyInstaller
-# ----------------------------------------------------------
-__pyinstaller__/
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
 
-# ----------------------------------------------------------
-# Model Weights
-# (Large AI models should NOT be stored in Git)
-# ----------------------------------------------------------
+# Reports
+reports/
+
+# Secrets
+credentials.json
+token.json
+secrets.json
+
+# Downloaded Models
+downloads/
+weights/
+
+# AI Models (ignored if regenerated externally)
+models/**/*.onnx
 models/**/*.pt
 models/**/*.pth
-models/**/*.onnx
 models/**/*.engine
 models/**/*.ckpt
 models/**/*.bin
 models/**/*.safetensors
+models/**/*.zip
 
-# Keep empty folders
-!models/**/.gitkeep
-
-# ----------------------------------------------------------
-# Runtime Data
-# ----------------------------------------------------------
+# Runtime Storage
 storage/cache/*
 !storage/cache/.gitkeep
 
 storage/files/*
 !storage/files/.gitkeep
 
+storage/profiles/*
+!storage/profiles/.gitkeep
+
+storage/photos/*
+
+# Data
 data/events/*
 !data/events/.gitkeep
 
-# ----------------------------------------------------------
-# Face Database
-# (Ignore registered users)
-# ----------------------------------------------------------
 data/faces/*
 !data/faces/.gitkeep
 
-# ----------------------------------------------------------
-# Voice Database
-# ----------------------------------------------------------
 data/voices/*
 !data/voices/.gitkeep
 
-# ----------------------------------------------------------
-# Object Database
-# ----------------------------------------------------------
 data/objects/*
 !data/objects/.gitkeep
 
-# ----------------------------------------------------------
-# Temporary Files
-# ----------------------------------------------------------
-*.tmp
-*.temp
-*.bak
-*.swp
-
-# ----------------------------------------------------------
-# OS Files
-# ----------------------------------------------------------
-Thumbs.db
-Desktop.ini
-.DS_Store
-
-# ----------------------------------------------------------
-# Jupyter
-# ----------------------------------------------------------
-.ipynb_checkpoints/
-
-# ----------------------------------------------------------
-# Sphinx
-# ----------------------------------------------------------
-docs/_build/
-
-# ----------------------------------------------------------
-# Type Checking
-# ----------------------------------------------------------
-.pyre/
-.pytype/
-
-# ----------------------------------------------------------
-# CMake
-# ----------------------------------------------------------
-CMakeFiles/
-CMakeCache.txt
-
-# ----------------------------------------------------------
-# VS Build
-# ----------------------------------------------------------
-*.obj
-*.o
-*.ilk
-*.pdb
-
-# ----------------------------------------------------------
-# Downloaded AI Models
-# ----------------------------------------------------------
-downloads/
-weights/
-
-# ----------------------------------------------------------
-# Generated Reports
-# ----------------------------------------------------------
-reports/
-
-# ----------------------------------------------------------
-# Secrets
-# ----------------------------------------------------------
-secrets.json
-credentials.json
-token.json
-
-# ----------------------------------------------------------
-# Keep Empty Directories
-# ----------------------------------------------------------
+# Keep Folder Structure
+!models/**/.gitkeep
 data/.gitkeep
 logs/.gitkeep
 resources/.gitkeep
 storage/.gitkeep
-
-# AI Models
-models/models/
-models/**/*.onnx
-models/**/*.zip
-storage/photos/
-
-# Python
-__pycache__/
-*.pyc
-.venv/
-
-# Database
-storage/sqlite/*.db
-
-# User profile images
-storage/profiles/*
-
-# Keep folder
-!storage/profiles/.gitkeep
-
-# VS Code
-.vscode/
-
-# Logs
-*.log
