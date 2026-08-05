@@ -32,55 +32,18 @@ recognition_system
 │   └── __init__.py
 ├── config
 │   ├── application.py
-│   ├── database.py
-│   ├── logging.py
 │   ├── paths.py
 │   ├── settings.py
-│   ├── ui.py
-│   ├── __init__.py
-│   └── __pycache__
-│       ├── application.cpython-312.pyc
-│       ├── application.cpython-313.pyc
-│       ├── paths.cpython-312.pyc
-│       ├── paths.cpython-313.pyc
-│       ├── settings.cpython-312.pyc
-│       ├── settings.cpython-313.pyc
-│       ├── __init__.cpython-312.pyc
-│       └── __init__.cpython-313.pyc
+│   └── __init__.py
 ├── core
 │   ├── base_service.py
 │   ├── camera
-│   │   ├── camera.py
-│   │   ├── frame.py
-│   │   ├── __init__.py
-│   │   └── __pycache__
-│   │       ├── camera.cpython-312.pyc
-│   │       ├── camera.cpython-313.pyc
-│   │       ├── frame.cpython-312.pyc
-│   │       ├── __init__.cpython-312.pyc
-│   │       └── __init__.cpython-313.pyc
-│   ├── events
-│   │   ├── event_bus.py
-│   │   └── __init__.py
+│   │   └── camera.py
 │   ├── logger
 │   │   ├── logger.py
-│   │   ├── __init__.py
-│   │   └── __pycache__
-│   │       ├── logger.cpython-312.pyc
-│   │       ├── logger.cpython-313.pyc
-│   │       ├── __init__.cpython-312.pyc
-│   │       └── __init__.cpython-313.pyc
-│   ├── microphone
 │   │   └── __init__.py
 │   ├── service_manager.py
-│   ├── __init__.py
-│   └── __pycache__
-│       ├── base_service.cpython-312.pyc
-│       ├── base_service.cpython-313.pyc
-│       ├── service_manager.cpython-312.pyc
-│       ├── service_manager.cpython-313.pyc
-│       ├── __init__.cpython-312.pyc
-│       └── __init__.cpython-313.pyc
+│   └── __init__.py
 ├── data
 │   ├── embeddings
 │   ├── events
@@ -113,19 +76,13 @@ recognition_system
 │   └── voices
 │       └── .gitkeep
 ├── database
-│   ├── database.py
-│   ├── __init__.py
-│   └── __pycache__
-│       ├── database.cpython-312.pyc
-│       ├── database.cpython-313.pyc
-│       ├── __init__.cpython-312.pyc
-│       └── __init__.cpython-313.pyc
+│   └── database.py
 ├── docs
 │   ├── API.md
 │   ├── Architecture.md
 │   ├── Development.md
 │   ├── Development_Plan.html
-│   ├── recognition_system.md
+│   ├── recognition_system.txt
 │   └── Roadmap.md
 ├── launcher.py
 ├── logs
@@ -164,6 +121,7 @@ recognition_system
 │   ├── vision
 │   │   └── __init__.py
 │   └── __init__.py
+├── project_tree.txt
 ├── README.md
 ├── requirements.txt
 ├── resources
@@ -186,94 +144,40 @@ recognition_system
 │   ├── camera
 │   │   ├── manager.py
 │   │   ├── service.py
-│   │   ├── __init__.py
-│   │   └── __pycache__
-│   │       ├── manager.cpython-312.pyc
-│   │       ├── manager.cpython-313.pyc
-│   │       ├── service.cpython-312.pyc
-│   │       ├── service.cpython-313.pyc
-│   │       ├── __init__.cpython-312.pyc
-│   │       └── __init__.cpython-313.pyc
-│   ├── camera_service.py
+│   │   └── __init__.py
 │   ├── database
 │   │   ├── manager.py
 │   │   ├── service.py
 │   │   └── __init__.py
-│   ├── database_service.py
 │   ├── face
-│   │   ├── detector.py
-│   │   ├── embedding.py
-│   │   ├── face_database.py
-│   │   ├── face_detector.py
-│   │   ├── manager.py
 │   │   ├── recognizer.py
 │   │   ├── service.py
-│   │   ├── trainer_old.py
 │   │   ├── yunet_detector.py
-│   │   ├── __init__.py
-│   │   └── __pycache__
-│   │       ├── detector.cpython-312.pyc
-│   │       ├── detector.cpython-313.pyc
-│   │       ├── embedding.cpython-312.pyc
-│   │       ├── embedding.cpython-313.pyc
-│   │       ├── face_database.cpython-312.pyc
-│   │       ├── face_database.cpython-313.pyc
-│   │       ├── face_detector.cpython-313.pyc
-│   │       ├── manager.cpython-312.pyc
-│   │       ├── manager.cpython-313.pyc
-│   │       ├── recognizer.cpython-312.pyc
-│   │       ├── recognizer.cpython-313.pyc
-│   │       ├── service.cpython-312.pyc
-│   │       ├── service.cpython-313.pyc
-│   │       ├── trainer.cpython-312.pyc
-│   │       ├── trainer.cpython-313.pyc
-│   │       ├── trainer_old.cpython-312.pyc
-│   │       ├── yunet_detector.cpython-312.pyc
-│   │       ├── yunet_detector.cpython-313.pyc
-│   │       ├── __init__.cpython-312.pyc
-│   │       └── __init__.cpython-313.pyc
-│   ├── face_service.py
+│   │   └── __init__.py
 │   ├── image
 │   │   ├── face_cropper.py
 │   │   ├── image_service.py
-│   │   ├── __init__.py
-│   │   └── __pycache__
-│   │       ├── face_cropper.cpython-312.pyc
-│   │       ├── image_service.cpython-312.pyc
-│   │       └── __init__.cpython-312.pyc
+│   │   └── __init__.py
 │   ├── object
 │   │   ├── manager.py
 │   │   ├── service.py
 │   │   └── __init__.py
-│   ├── object_service.py
 │   ├── person
 │   │   ├── person_database.py
 │   │   ├── person_service.py
-│   │   ├── __init__.py
-│   │   └── __pycache__
-│   │       ├── person_database.cpython-312.pyc
-│   │       ├── person_service.cpython-312.pyc
-│   │       └── __init__.cpython-312.pyc
+│   │   └── __init__.py
 │   ├── settings
 │   │   ├── manager.py
 │   │   ├── service.py
 │   │   └── __init__.py
-│   ├── settings_service.py
 │   ├── voice
 │   │   ├── manager.py
 │   │   ├── service.py
 │   │   └── __init__.py
-│   ├── voice_service.py
 │   ├── watcher
 │   │   ├── unknown_watcher.py
-│   │   ├── __init__.py
-│   │   └── __pycache__
-│   │       ├── unknown_watcher.cpython-312.pyc
-│   │       └── __init__.cpython-312.pyc
-│   ├── __init__.py
-│   └── __pycache__
-│       ├── __init__.cpython-312.pyc
-│       └── __init__.cpython-313.pyc
+│   │   └── __init__.py
+│   └── __init__.py
 ├── shared
 │   ├── constants.py
 │   ├── enums.py
@@ -318,61 +222,28 @@ recognition_system
 │   ├── dialogs
 │   │   ├── person_dialog.py
 │   │   ├── unknown_person_dialog.py
-│   │   ├── __init__.py
-│   │   └── __pycache__
-│   │       ├── person_dialog.cpython-312.pyc
-│   │       ├── unknown_person_dialog.cpython-312.pyc
-│   │       └── __init__.cpython-312.pyc
+│   │   └── __init__.py
 │   ├── themes
 │   │   ├── theme_manager.py
-│   │   ├── __init__.py
-│   │   └── __pycache__
-│   │       ├── theme_manager.cpython-312.pyc
-│   │       ├── theme_manager.cpython-313.pyc
-│   │       ├── __init__.cpython-312.pyc
-│   │       └── __init__.cpython-313.pyc
+│   │   └── __init__.py
 │   ├── widgets
 │   │   ├── camera_widget.py
 │   │   ├── dashboard.py
 │   │   ├── face_gallery
 │   │   ├── face_gallery.py
-│   │   ├── __init__.py
-│   │   └── __pycache__
-│   │       ├── camera_widget.cpython-312.pyc
-│   │       ├── camera_widget.cpython-313.pyc
-│   │       ├── dashboard.cpython-312.pyc
-│   │       ├── dashboard.cpython-313.pyc
-│   │       ├── face_gallery.cpython-312.pyc
-│   │       ├── __init__.cpython-312.pyc
-│   │       └── __init__.cpython-313.pyc
+│   │   └── __init__.py
 │   ├── windows
 │   │   ├── main_window.py
-│   │   ├── __init__.py
-│   │   └── __pycache__
-│   │       ├── main_window.cpython-312.pyc
-│   │       ├── main_window.cpython-313.pyc
-│   │       ├── __init__.cpython-312.pyc
-│   │       └── __init__.cpython-313.pyc
-│   ├── __init__.py
-│   └── __pycache__
-│       ├── __init__.cpython-312.pyc
-│       └── __init__.cpython-313.pyc
-├── version.py
-├── vision
-│   ├── face
-│   │   └── __init__.py
-│   ├── gesture
-│   │   └── __init__.py
-│   ├── object
-│   │   └── __init__.py
-│   ├── ocr
 │   │   └── __init__.py
 │   └── __init__.py
-└── __pycache__
-    ├── app.cpython-312.pyc
-    ├── app.cpython-313.pyc
-    ├── application.cpython-312.pyc
-    ├── application.cpython-313.pyc
-    ├── launcher.cpython-313.pyc
-    ├── version.cpython-312.pyc
-    └── version.cpython-313.pyc
+├── version.py
+└── vision
+    ├── face
+    │   └── __init__.py
+    ├── gesture
+    │   └── __init__.py
+    ├── object
+    │   └── __init__.py
+    ├── ocr
+    │   └── __init__.py
+    └── __init__.py
