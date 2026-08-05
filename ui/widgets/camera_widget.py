@@ -5,6 +5,7 @@ from PIL import Image
 from services.camera.manager import camera_service
 from services.face.service import face_ai
 from services.image.face_cropper import FaceCropper
+from services.unknown_queue.queue_service import unknown_queue
 
 
 
@@ -71,13 +72,15 @@ class CameraWidget(ctk.CTkLabel):
                         score = 0
 
 
-                    window = self.winfo_toplevel()
-
                     if (
-                        hasattr(window, "check_unknown")
-                        and window.winfo_exists()
+                        name == "Unknown"
+                        and self.last_face_crop is not None
+                        and embedding is not None
                     ):
-                        window.check_unknown(name)
+                        unknown_queue.add(
+                            image=self.last_face_crop,
+                            embedding=embedding
+                        )
 
 
                     x, y, w, h = face[:4].astype(int)

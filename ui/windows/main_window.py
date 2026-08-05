@@ -10,8 +10,6 @@ from ui.widgets.camera_widget import CameraWidget
 from ui.widgets.face_gallery import FaceGallery
 from ui.widgets.unknown_faces import UnknownFaces
 from ui.dialogs.person_dialog import PersonDialog
-from services.watcher.unknown_watcher import unknown_watcher
-from ui.dialogs.unknown_person_dialog import UnknownPersonDialog
 
 
 class MainWindow(ctk.CTk):
@@ -25,17 +23,7 @@ class MainWindow(ctk.CTk):
         ctk.set_appearance_mode("Dark")
         ctk.set_default_color_theme("blue")
 
-        self.unknown_popup = None
-
         self.build_layout()
-
-    def check_unknown(self, name):
-
-        if unknown_watcher.update(name):
-
-            if self.unknown_popup is None or not self.unknown_popup.winfo_exists():
-
-                self.unknown_popup = UnknownPersonDialog(self, self.camera_widget.last_face_crop)
 
     def build_layout(self):
 
