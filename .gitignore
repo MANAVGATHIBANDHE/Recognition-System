@@ -84,6 +84,9 @@ models/**/*.safetensors
 models/**/*.zip
 
 # Runtime Storage
+storage/unknown_faces/*
+!storage/unknown_faces/.gitkeep
+
 storage/cache/*
 !storage/cache/.gitkeep
 
