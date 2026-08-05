@@ -15,10 +15,21 @@ class CameraService(BaseService):
     def start(self):
 
         if self.camera.open():
+
+            self.running = True
+
             app_logger.success("Camera Opened")
+
         else:
+
+            self.running = False
+
             app_logger.error("Camera Not Found")
 
     def stop(self):
+
         self.camera.release()
+
+        self.running = False
+
         app_logger.info("Camera Released")

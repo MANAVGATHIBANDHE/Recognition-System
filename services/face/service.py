@@ -19,9 +19,15 @@ class FaceService(BaseService):
         self.recognizer = FaceRecognizer()
 
     def start(self):
+
+        self.running = True
+
         app_logger.success("Face Service Started")
 
     def stop(self):
+
+        self.running = False
+
         app_logger.info("Face Service Stopped")
 
 
