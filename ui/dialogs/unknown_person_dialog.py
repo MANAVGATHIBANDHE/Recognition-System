@@ -1,7 +1,9 @@
 import customtkinter as ctk
-from ui.dialogs.person_dialog import PersonDialog
 from PIL import Image
+
+from ui.dialogs.person_dialog import PersonDialog
 from core.logger.logger import app_logger
+
 
 class UnknownPersonDialog(ctk.CTkToplevel):
 
@@ -12,73 +14,84 @@ class UnknownPersonDialog(ctk.CTkToplevel):
         self.title("Unknown Person")
         self.geometry("430x500")
 
+        self.transient(parent)
         self.grab_set()
+
         self.face_image = image
+
+        self.protocol("WM_DELETE_WINDOW", self.close)
 
         label = ctk.CTkLabel(
             self,
             text="Unknown Person Detected",
-            font=("Segoe UI",18,"bold")
+            font=("Segoe UI", 18, "bold")
         )
-
-        label.pack(pady=(15,10))
+        label.pack(pady=(15, 10))
 
         if self.face_image is not None:
 
-            image = Image.fromarray(self.face_image)
+            img = Image.fromarray(self.face_image)
 
-            photo = ctk.CTkImage(
-                light_image=image,
-                dark_image=image,
-                size=(170,170)
+            self.preview_image = ctk.CTkImage(
+                light_image=img,
+                dark_image=img,
+                size=(170, 170)
             )
 
             preview = ctk.CTkLabel(
                 self,
-                image=photo,
+                image=self.preview_image,
                 text=""
             )
 
-            preview.image = photo
-
             preview.pack(pady=10)
 
-        ctk.CTkButton(
-
+        self.register_button = ctk.CTkButton(
             self,
-
             text="Register New",
-
             command=self.open_registration
+        )
+        self.register_button.pack(pady=10)
 
-        ).pack(pady=10)
-
-        ctk.CTkButton(
+        self.later_button = ctk.CTkButton(
             self,
             text="Maybe Later",
             command=self.maybe_later
-        ).pack(
-            pady=5
         )
+        self.later_button.pack(pady=5)
 
-        ctk.CTkButton(
-
+        self.ignore_button = ctk.CTkButton(
             self,
-
             text="Ignore",
+            command=self.close
+        )
+        self.ignore_button.pack()
 
-            command=self.destroy
+    def close(self):
+        try:
+            self.grab_release()
+        except Exception:
+            pass
 
-        ).pack()
+        if self.winfo_exists():
+            self.destroy()
 
     def open_registration(self):
 
-        window = self.master
-        PersonDialog(window, face_image=window.camera_widget.last_face_crop, embedding=window.camera_widget.current_embedding)
+        if not self.master.winfo_exists():
+            self.close()
+            return
 
-        self.destroy()
+        window = self.master
+
+        PersonDialog(
+            window,
+            face_image=window.camera_widget.last_face_crop,
+            embedding=window.camera_widget.current_embedding
+        )
+
+        self.close()
 
     def maybe_later(self):
         app_logger.info("Unknown person registration postponed")
-
-        self.destroy()
+        self.close()

@@ -8,6 +8,7 @@ from core.logger.logger import app_logger
 from ui.widgets.dashboard import Dashboard
 from ui.widgets.camera_widget import CameraWidget
 from ui.widgets.face_gallery import FaceGallery
+from ui.widgets.unknown_faces import UnknownFaces
 from ui.dialogs.person_dialog import PersonDialog
 from services.watcher.unknown_watcher import unknown_watcher
 from ui.dialogs.unknown_person_dialog import UnknownPersonDialog
@@ -60,7 +61,8 @@ class MainWindow(ctk.CTk):
         buttons = [
             "Dashboard",
             "Camera",
-            "Face",
+            "Registered Faces",
+            "Today's Unknown Faces",
             "Object",
             "Voice",
             "OCR",
@@ -116,6 +118,8 @@ class MainWindow(ctk.CTk):
 
         self.face_gallery = FaceGallery(self.content)
 
+        self.unknown_faces = UnknownFaces(self.content)
+
     def register_face(self):
 
         frame = getattr(self.camera_widget, "current_frame", None)
@@ -141,6 +145,7 @@ class MainWindow(ctk.CTk):
 
         self.dashboard.pack_forget()
         self.face_gallery.pack_forget()
+        self.unknown_faces.pack_forget()
 
         if page == "Dashboard":
 
@@ -151,11 +156,22 @@ class MainWindow(ctk.CTk):
                 pady=20
             )
 
-        elif page == "Face":
+        elif page == "Registered Faces":
 
             self.face_gallery.refresh()
 
             self.face_gallery.pack(
+                fill="both",
+                expand=True,
+                padx=20,
+                pady=20
+            )
+
+        elif page == "Today's Unknown Faces":
+
+            self.unknown_faces.refresh()
+
+            self.unknown_faces.pack(
                 fill="both",
                 expand=True,
                 padx=20,

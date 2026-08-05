@@ -1,6 +1,6 @@
 import customtkinter as ctk
 import cv2
-from PIL import Image, ImageTk
+from PIL import Image
 
 from services.camera.manager import camera_service
 from services.face.service import face_ai
@@ -19,6 +19,9 @@ class CameraWidget(ctk.CTkLabel):
         self.after(30, self.update_frame)
 
     def update_frame(self):
+
+        if not self.winfo_exists():
+            return
 
         if camera_service.camera.cap is not None:
 
@@ -70,7 +73,10 @@ class CameraWidget(ctk.CTkLabel):
 
                     window = self.winfo_toplevel()
 
-                    if hasattr(window, "check_unknown"):
+                    if (
+                        hasattr(window, "check_unknown")
+                        and window.winfo_exists()
+                    ):
                         window.check_unknown(name)
 
 
@@ -102,10 +108,13 @@ class CameraWidget(ctk.CTkLabel):
 
                 image = image.resize((800, 450))
 
-                photo = ImageTk.PhotoImage(image=image)
+                self.camera_image = ctk.CTkImage(
+                    light_image=image,
+                    dark_image=image,
+                    size=(800, 450)
+                )
 
-                self.configure(image=photo)
+                self.configure(image=self.camera_image)
 
-                self.image = photo
-
-        self.after(30, self.update_frame)
+        if self.winfo_exists():
+            self.after(30, self.update_frame)

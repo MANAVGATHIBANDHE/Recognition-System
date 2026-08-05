@@ -1,0 +1,2 @@
+ui\dialogs\unknown_person_dialog.py:8:class UnknownPersonDialog(ctk.CTkToplevel):
+ui\windows\main_window.py:37:                self.unknown_popup = UnknownPersonDialog(self, self.camera_widget.last_face_crop)

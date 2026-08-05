@@ -4,6 +4,8 @@ Recognition System Application
 
 from config import ApplicationConfig
 
+from config.paths import create_project_directories
+
 from core.logger.logger import app_logger
 from database.database import database
 from ui.themes.theme_manager import ThemeManager
@@ -31,6 +33,8 @@ class Application:
     def initialize(self):
 
         self.print_banner()
+
+        create_project_directories()
 
         app_logger.success("Configuration Loaded")
 
