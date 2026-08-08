@@ -2,6 +2,8 @@ import sqlite3
 import uuid
 from datetime import datetime
 
+import numpy as np
+
 
 class UnknownQueueDatabase:
 
@@ -42,6 +44,52 @@ class UnknownQueueDatabase:
 
         self.connection.commit()
 
+    def find_similar(
+        self,
+        embedding,
+        threshold=0.60
+    ):
+
+        self.cursor.execute("""
+            SELECT
+                uuid,
+                embedding
+            FROM unknown_faces
+        """)
+
+        rows = self.cursor.fetchall()
+
+        if not rows:
+            return None
+
+        embedding = embedding.astype(np.float32)
+
+        best_uuid = None
+        best_score = -1.0
+
+        for uid, blob in rows:
+
+            db_embedding = np.frombuffer(
+                blob,
+                dtype=np.float32
+            )
+
+            score = float(
+                np.dot(
+                    embedding,
+                    db_embedding
+                )
+            )
+
+            if score > best_score:
+                best_score = score
+                best_uuid = uid
+
+        if best_score >= threshold:
+            return best_uuid
+
+        return None
+
     def add_unknown(
         self,
         photo_path,
@@ -51,7 +99,9 @@ class UnknownQueueDatabase:
 
         uid = str(uuid.uuid4())
 
-        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        now = datetime.now().strftime(
+            "%Y-%m-%d %H:%M:%S"
+        )
 
         self.cursor.execute(
             """
@@ -71,7 +121,7 @@ class UnknownQueueDatabase:
             (
                 uid,
                 photo_path,
-                embedding.astype("float32").tobytes(),
+                embedding.astype(np.float32).tobytes(),
                 now,
                 now,
                 camera
@@ -85,22 +135,37 @@ class UnknownQueueDatabase:
     def get_all(self):
 
         self.cursor.execute("""
-        SELECT
-            uuid,
-            photo,
-            first_seen,
-            last_seen,
-            seen_count,
-            status
-        FROM unknown_faces
-        ORDER BY id DESC
+            SELECT
+
+                uuid,
+
+                photo,
+
+                embedding,
+
+                first_seen,
+
+                last_seen,
+
+                seen_count,
+
+                status
+
+            FROM unknown_faces
+
+            ORDER BY id DESC
         """)
 
         return self.cursor.fetchall()
 
-    def update_seen(self, uid):
+    def update_seen(
+        self,
+        uid
+    ):
 
-        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        now = datetime.now().strftime(
+            "%Y-%m-%d %H:%M:%S"
+        )
 
         self.cursor.execute(
             """
@@ -108,11 +173,11 @@ class UnknownQueueDatabase:
 
             SET
 
-                seen_count=seen_count+1,
+                seen_count = seen_count + 1,
 
-                last_seen=?
+                last_seen = ?
 
-            WHERE uuid=?
+            WHERE uuid = ?
             """,
             (
                 now,
@@ -144,7 +209,10 @@ class UnknownQueueDatabase:
 
         self.connection.commit()
 
-    def delete(self, uid):
+    def delete(
+        self,
+        uid
+    ):
 
         self.cursor.execute(
             """

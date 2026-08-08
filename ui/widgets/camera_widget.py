@@ -62,6 +62,12 @@ class CameraWidget(ctk.CTkLabel):
 
                         embedding = results[index].embedding
 
+                        track_id = getattr(
+                            face,
+                            "track_id",
+                            0
+                        )
+
                         name, score = face_ai.recognizer.identify(
                             embedding
                         )
@@ -95,7 +101,7 @@ class CameraWidget(ctk.CTkLabel):
 
                     cv2.putText(
                         frame,
-                        f"{name}  {score:.2f}",
+                        f"ID ({track_id} | {name})  {score:.2f}",
                         (x, y - 10),
                         cv2.FONT_HERSHEY_SIMPLEX,
                         0.7,

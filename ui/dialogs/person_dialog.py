@@ -145,6 +145,8 @@ class PersonDialog(ctk.CTkToplevel):
 
         )
 
+        # Refresh recognition cache
         face_ai.recognizer.reload()
 
+        # Close dialog
         self.destroy()

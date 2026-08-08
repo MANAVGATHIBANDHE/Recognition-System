@@ -1,7 +1,7 @@
 import numpy as np
 
-from scipy.spatial.distance import cosine
 from insightface.app import FaceAnalysis
+
 from services.person.person_database import person_database
 from core.logger.logger import app_logger
 
@@ -20,7 +20,8 @@ class FaceRecognizer:
             det_size=(640, 640)
         )
 
-        self.persons = []
+        # person_name -> embedding ndarray
+        self.person_cache = {}
 
         self.reload()
 
@@ -28,34 +29,69 @@ class FaceRecognizer:
         app_logger.info("Face Recognizer Running")
 
     def recognize(self, frame):
-        return self.app.get(frame)
+
+        faces = self.app.get(frame)
+
+        from services.tracking.tracker import face_tracker
+
+        for face in faces:
+
+            if hasattr(face, "embedding"):
+
+                track_id = face_tracker.update(
+                    face.embedding
+                )
+
+                face.track_id = track_id
+
+        face_tracker.cleanup()
+
+        return faces
+
+    def reload(self):
+
+        self.person_cache.clear()
+
+        persons = person_database.get_all_embeddings()
+
+        for name, emb_bytes in persons:
+
+            if emb_bytes is None:
+                continue
+
+            emb = np.frombuffer(
+                emb_bytes,
+                dtype=np.float32
+            )
+
+            emb = emb / np.linalg.norm(emb)
+
+            self.person_cache[name] = emb
+
+        app_logger.success(
+            f"Loaded {len(self.person_cache)} Face Profiles"
+        )
 
     def identify(self, live_embedding):
 
-        persons = self.persons
-
-        if len(persons) == 0:
+        if len(self.person_cache) == 0:
             return "Unknown", 0.0
+
+        live_embedding = (
+            live_embedding /
+            np.linalg.norm(live_embedding)
+        )
 
         best_name = "Unknown"
         best_score = 0.0
 
-        for name, db_bytes in persons:
+        for name, db_embedding in self.person_cache.items():
 
-            if db_bytes is None:
-                continue
-
-            db_embedding = np.frombuffer(
-                db_bytes,
-                dtype=np.float32
-            )
-
-            score = np.dot(
-                live_embedding,
-                db_embedding
-            ) / (
-                np.linalg.norm(live_embedding)
-                * np.linalg.norm(db_embedding)
+            score = float(
+                np.dot(
+                    live_embedding,
+                    db_embedding
+                )
             )
 
             if score > best_score:
@@ -64,13 +100,9 @@ class FaceRecognizer:
                 best_name = name
 
         if best_score >= 0.55:
-            return best_name, float(best_score)
+            return best_name, best_score
 
-        return "Unknown", float(best_score)
-
-    def reload(self):
-
-        self.persons = person_database.get_all_embeddings()
+        return "Unknown", best_score
 
 
 face_recognizer = FaceRecognizer()

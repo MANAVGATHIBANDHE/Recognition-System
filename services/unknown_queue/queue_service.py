@@ -2,6 +2,10 @@ from services.unknown_queue.queue_database import (
     unknown_queue_database
 )
 
+from services.image.unknown_face_storage import (
+    unknown_face_storage
+)
+
 
 class UnknownQueueService:
 
@@ -11,9 +15,23 @@ class UnknownQueueService:
 
     def add(
         self,
-        photo_path,
+        image,
         embedding
     ):
+
+        uid = self.database.find_similar(
+            embedding
+        )
+
+        if uid:
+
+            self.database.update_seen(uid)
+
+            return uid
+
+        photo_path = unknown_face_storage.save(
+            image
+        )
 
         return self.database.add_unknown(
             photo_path,
@@ -24,18 +42,27 @@ class UnknownQueueService:
 
         return self.database.get_all()
 
-    def delete(self, uid):
+    def delete(
+        self,
+        uid
+    ):
 
         self.database.delete(uid)
 
-    def mark_ignored(self, uid):
+    def mark_ignored(
+        self,
+        uid
+    ):
 
         self.database.set_status(
             uid,
             "IGNORED"
         )
 
-    def mark_pending(self, uid):
+    def mark_pending(
+        self,
+        uid
+    ):
 
         self.database.set_status(
             uid,
