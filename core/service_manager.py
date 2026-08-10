@@ -1,6 +1,6 @@
 """
 Service Manager
-Recognition System
+Recognition System v2
 """
 
 from core.logger.logger import logger
@@ -12,46 +12,154 @@ class ServiceManager:
 
         self.services = {}
 
-    def register(self, service):
+    def register(self, service) -> None:
+        """
+        Register a service.
+        """
+
+        if service.name in self.services:
+
+            logger.warning(
+                f"Service '{service.name}' already registered."
+            )
+
+            return
 
         self.services[service.name] = service
 
-        logger.info(f"Registered Service -> {service.name}")
+        logger.info(
+            f"Registered Service -> {service.name}"
+        )
 
-    def start(self, name):
+    def start(self, name: str) -> None:
+        """
+        Start a service.
+        """
 
-        if name in self.services:
+        service = self.services.get(name)
 
-            self.services[name].start()
+        if service is None:
 
-            logger.success(f"{name} Started")
+            logger.error(
+                f"Service '{name}' not found."
+            )
 
-    def stop(self, name):
+            return
 
-        if name in self.services:
+        try:
 
-            self.services[name].stop()
+            service.start()
 
-            logger.warning(f"{name} Stopped")
+            logger.success(
+                f"{name} Started"
+            )
 
-    def restart(self, name):
+        except Exception as e:
 
-        if name in self.services:
+            logger.exception(e)
 
-            self.services[name].restart()
+    def stop(self, name: str) -> None:
+        """
+        Stop a service.
+        """
 
-            logger.success(f"{name} Restarted")
+        service = self.services.get(name)
 
-    def get(self, name):
+        if service is None:
+
+            logger.error(
+                f"Service '{name}' not found."
+            )
+
+            return
+
+        try:
+
+            service.stop()
+
+            logger.warning(
+                f"{name} Stopped"
+            )
+
+        except Exception as e:
+
+            logger.exception(e)
+
+    def restart(self, name: str) -> None:
+        """
+        Restart a service.
+        """
+
+        service = self.services.get(name)
+
+        if service is None:
+
+            logger.error(
+                f"Service '{name}' not found."
+            )
+
+            return
+
+        try:
+
+            service.restart()
+
+            logger.success(
+                f"{name} Restarted"
+            )
+
+        except Exception as e:
+
+            logger.exception(e)
+
+    def start_all(self) -> None:
+        """
+        Start all registered services.
+        """
+
+        for name in self.services:
+
+            self.start(name)
+
+    def stop_all(self) -> None:
+        """
+        Stop all registered services.
+        """
+
+        for name in list(self.services.keys())[::-1]:
+
+            self.stop(name)
+
+    def get(self, name: str):
+        """
+        Return a registered service.
+        """
 
         return self.services.get(name)
 
-    def status(self):
+    def status(self) -> dict:
+        """
+        Return status of all services.
+        """
 
-        result = {}
+        return {
 
-        for name, service in self.services.items():
+            name: service.status()
 
-            result[name] = service.status()
+            for name, service in self.services.items()
 
-        return result
+        }
+
+    def count(self) -> int:
+        """
+        Total registered services.
+        """
+
+        return len(self.services)
+
+    def list_services(self) -> list[str]:
+        """
+        Return all registered service names.
+        """
+
+        return list(self.services.keys())

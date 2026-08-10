@@ -1,80 +1,108 @@
 """
-Today's Unknown Faces
+Unknown Faces
 Recognition System v2
 """
+
+import os
+import cv2
+import numpy as np
 import customtkinter as ctk
 from PIL import Image
 
-import cv2
-
-import os
-
+from services.face.service import face_ai
+from services.person.person_service import person_service
 from services.unknown_queue.queue_service import unknown_queue
 
 from ui.dialogs.person_dialog import PersonDialog
-
-import numpy as np
+from ui.dialogs.select_person_dialog import SelectPersonDialog
 
 
 class UnknownFaces(ctk.CTkScrollableFrame):
 
-    def __init__(self, parent):
+    def __init__(self, master):
 
-        super().__init__(parent)
+        super().__init__(master)
+
+        self.search_text = ""
 
         self.refresh()
+
+    # ======================================================
 
     def refresh(self):
 
         for widget in self.winfo_children():
             widget.destroy()
 
-        title = ctk.CTkLabel(
-            self,
-            text="Today's Unknown Faces",
-            font=("Segoe UI", 24, "bold")
+        header = ctk.CTkFrame(self)
+
+        header.pack(
+            fill="x",
+            padx=15,
+            pady=(15, 10)
         )
 
-        title.pack(
-            pady=20
+        ctk.CTkLabel(
+            header,
+            text="Today's Unknown Faces",
+            font=("Segoe UI", 24, "bold")
+        ).pack(
+            side="left"
+        )
+
+        search = ctk.CTkEntry(
+            header,
+            width=220,
+            placeholder_text="Search UID..."
+        )
+
+        search.insert(0, self.search_text)
+
+        search.pack(
+            side="right"
+        )
+
+        search.bind(
+            "<KeyRelease>",
+            lambda e: self.search(search.get())
         )
 
         rows = unknown_queue.get_all()
 
         if not rows:
 
-            empty = ctk.CTkLabel(
+            ctk.CTkLabel(
                 self,
-                text="No Unknown Faces"
+                text="No Unknown Faces",
+                font=("Segoe UI", 20)
+            ).pack(
+                pady=60
             )
-
-            empty.pack(pady=50)
 
             return
 
         for row in rows:
 
-            uid = row[0]
+            if self.search_text:
 
-            photo = row[1]
+                if self.search_text.lower() not in row["uuid"].lower():
+                    continue
 
-            embedding_blob = row[2]
+            uid = row["uuid"]
+            photo = row["photo"]
+            embedding_blob = row["embedding"]
+            first_seen = row["first_seen"]
+            last_seen = row["last_seen"]
+            seen_count = row["seen_count"]
+            status = row["status"]
 
-            first_seen = row[3]
-
-            last_seen = row[4]
-
-            seen_count = row[5]
-
-            status = row[6]
+            if not isinstance(embedding_blob, (bytes, bytearray)):
+                continue
 
             embedding = np.frombuffer(
-
                 embedding_blob,
-
                 dtype=np.float32
-
-            )
+            ).copy()
 
             face_image = None
 
@@ -82,212 +110,250 @@ class UnknownFaces(ctk.CTkScrollableFrame):
 
                 face_image = cv2.imread(photo)
 
-            card = ctk.CTkFrame(self, corner_radius=12)
-
-            card.pack(
-                fill="x",
-                padx=15,
-                pady=10
+            self.create_card(
+                uid,
+                photo,
+                embedding,
+                face_image,
+                first_seen,
+                last_seen,
+                seen_count,
+                status
             )
 
-            top = ctk.CTkFrame(
-                card,
-                fg_color="transparent"
-            )
+    # ======================================================
 
-            top.pack(
-                fill="x",
-                padx=15,
-                pady=15
-            )
+    def create_card(
+        self,
+        uid,
+        photo,
+        embedding,
+        face_image,
+        first_seen,
+        last_seen,
+        seen_count,
+        status
+    ):
 
-            photo_frame = ctk.CTkFrame(
-                top,
-                width=120,
-                height=120
-            )
+        card = ctk.CTkFrame(
+            self,
+            corner_radius=12
+        )
 
-            photo_frame.pack(
-                side="left",
-                padx=(0,20)
-            )
+        card.pack(
+            fill="x",
+            padx=15,
+            pady=10
+        )
 
-            photo_frame.pack_propagate(False)
+        top = ctk.CTkFrame(
+            card,
+            fg_color="transparent"
+        )
 
-            if photo and os.path.exists(photo):
+        top.pack(
+            fill="x",
+            padx=15,
+            pady=15
+        )
 
-                try:
+        photo_frame = ctk.CTkFrame(
+            top,
+            width=120,
+            height=120
+        )
 
-                    image = Image.open(photo)
+        photo_frame.pack(
+            side="left",
+            padx=(0, 20)
+        )
 
-                    image.thumbnail((110,110), Image.LANCZOS)
+        photo_frame.pack_propagate(False)
 
-                    face = ctk.CTkImage(
-                        light_image=image,
-                        dark_image=image,
-                        size=(110,110)
-                    )
+        if photo and os.path.exists(photo):
 
-                    label = ctk.CTkLabel(
-                        photo_frame,
-                        image=face,
-                        text=""
-                    )
+            try:
 
-                    label.image = face
+                image = Image.open(photo)
 
-                    label.pack(expand=True)
+                image.thumbnail((110, 110))
 
-                except Exception:
-
-                    ctk.CTkLabel(
-                        photo_frame,
-                        text="Image Error"
-                    ).pack(expand=True)
-
-
-            info = ctk.CTkFrame(
-                top,
-                fg_color="transparent"
-            )
-
-            info.pack(
-                side="left",
-                fill="both",
-                expand=True
-            )
-
-            ctk.CTkLabel(
-
-                info,
-
-                text=f"Unknown Face #{uid[:8]}",
-
-                font=("Segoe UI",20,"bold")
-
-            ).pack(anchor="w")
-
-            ctk.CTkLabel(
-
-                info,
-
-                text=f"First Seen : {first_seen}"
-
-            ).pack(anchor="w", pady=3)
-
-            ctk.CTkLabel(
-
-                info,
-
-                text=f"Last Seen : {last_seen}"
-
-            ).pack(anchor="w", pady=3)
-
-            ctk.CTkLabel(
-
-                info,
-
-                text=f"Seen Count : {seen_count}"
-
-            ).pack(anchor="w", pady=3)
-
-            status_color = {
-                "NEW": "#22c55e",
-                "PENDING": "#f59e0b",
-                "IGNORED": "#ef4444"
-            }.get(status, "white")
-
-            ctk.CTkLabel(
-                info,
-                text=f"Status : {status}",
-                text_color=status_color
-            ).pack(anchor="w", pady=3)
-
-            buttons = ctk.CTkFrame(card, fg_color="transparent")
-
-            buttons.pack(
-                fill="x",
-                padx=15,
-                pady=(0,15)
-            )
-
-            ctk.CTkButton(
-
-                buttons,
-
-                text="Register",
-
-                width=130,
-
-                command=lambda
-
-                img=face_image,
-
-                emb=embedding,
-
-                uid=uid:
-
-                self.register(
-
-                    uid,
-
-                    img,
-
-                    emb
-
+                face = ctk.CTkImage(
+                    light_image=image,
+                    dark_image=image,
+                    size=(110, 110)
                 )
 
-            ).pack(
-                side="left",
-                padx=(0,8)
+                label = ctk.CTkLabel(
+                    photo_frame,
+                    image=face,
+                    text=""
+                )
+
+                label.image = face
+
+                label.pack(expand=True)
+
+            except Exception:
+
+                ctk.CTkLabel(
+                    photo_frame,
+                    text="Image Error"
+                ).pack(expand=True)
+
+        info = ctk.CTkFrame(
+            top,
+            fg_color="transparent"
+        )
+
+        info.pack(
+            side="left",
+            fill="both",
+            expand=True
+        )
+
+        ctk.CTkLabel(
+            info,
+            text=f"Unknown Face #{uid[:8]}",
+            font=("Segoe UI", 20, "bold")
+        ).pack(anchor="w")
+
+        ctk.CTkLabel(
+            info,
+            text=f"First Seen : {first_seen}"
+        ).pack(anchor="w")
+
+        ctk.CTkLabel(
+            info,
+            text=f"Last Seen : {last_seen}"
+        ).pack(anchor="w")
+
+        ctk.CTkLabel(
+            info,
+            text=f"Seen Count : {seen_count}"
+        ).pack(anchor="w")
+
+        ctk.CTkLabel(
+            info,
+            text=f"Status : {status}"
+        ).pack(anchor="w")
+
+        buttons = ctk.CTkFrame(
+            card,
+            fg_color="transparent"
+        )
+
+        buttons.pack(
+            fill="x",
+            padx=15,
+            pady=(0, 15)
+        )
+
+        ctk.CTkButton(
+            buttons,
+            text="Register",
+            command=lambda:
+            self.register(
+                uid,
+                face_image,
+                embedding
             )
+        ).pack(side="left", padx=5)
 
-            ctk.CTkButton(
-
-                buttons,
-
-                text="Add To Existing",
-
-                width=160
-
-            ).pack(
-                side="left",
-                padx=5
+        ctk.CTkButton(
+            buttons,
+            text="Add To Existing",
+            command=lambda:
+            self.select_person(
+                uid,
+                embedding
             )
+        ).pack(side="left", padx=5)
 
-            ctk.CTkButton(
+        ctk.CTkButton(
+            buttons,
+            text="Ignore",
+            command=lambda:
+            self.ignore(uid)
+        ).pack(side="left", padx=5)
 
-                buttons,
+        ctk.CTkButton(
+            buttons,
+            text="Delete",
+            fg_color="#b91c1c",
+            hover_color="#991b1b",
+            command=lambda:
+            self.delete(uid)
+        ).pack(side="left", padx=5)
 
-                text="Ignore",
+    # ======================================================
 
-                width=100,
+    def search(self, text):
 
-                command=lambda u=uid:self.ignore(u)
+        self.search_text = text
 
-            ).pack(
-                side="left",
-                padx=5
+        self.refresh()
+
+    # ======================================================
+
+    def register(
+        self,
+        uid,
+        image,
+        embedding
+    ):
+
+        dialog = PersonDialog(
+            self.winfo_toplevel(),
+            face_image=image,
+            embedding=embedding
+        )
+
+        self.wait_window(dialog)
+
+        face_ai.recognizer.reload()
+
+        unknown_queue.delete(uid)
+
+        self.refresh()
+
+    # ======================================================
+
+    def select_person(
+        self,
+        uid,
+        embedding
+    ):
+
+        SelectPersonDialog(
+            self.winfo_toplevel(),
+            callback=lambda name:
+            self.add_existing(
+                uid,
+                name,
+                embedding
             )
+        )
 
-            ctk.CTkButton(
+    def add_existing(
+        self,
+        uid,
+        name,
+        embedding
+    ):
 
-                buttons,
+        if person_service.add_to_existing(
+            name,
+            embedding
+        ):
 
-                text="Delete",
+            face_ai.recognizer.reload()
 
-                width=100,
+            unknown_queue.delete(uid)
 
-                fg_color="#b91c1c",
+            self.refresh()
 
-                hover_color="#991b1b",
-
-                command=lambda u=uid:self.delete(u)
-
-            ).pack(
-                side="left",
-                padx=5
-            )
+    # ======================================================
 
     def ignore(self, uid):
 
@@ -296,32 +362,6 @@ class UnknownFaces(ctk.CTkScrollableFrame):
         self.refresh()
 
     def delete(self, uid):
-
-        unknown_queue.delete(uid)
-
-        self.refresh()
-
-    def register(
-
-        self,
-
-        uid,
-
-        image,
-
-        embedding
-
-    ):
-
-        PersonDialog(
-
-            self.winfo_toplevel(),
-
-            face_image=image,
-
-            embedding=embedding
-
-        )
 
         unknown_queue.delete(uid)
 

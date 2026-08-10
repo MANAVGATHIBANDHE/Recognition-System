@@ -1,40 +1,82 @@
 """
 Project Paths
-Recognition System
+Recognition System v2
 """
 
 from pathlib import Path
 
+# ==========================================================
+# Root Directory
+# ==========================================================
+
 ROOT_DIR = Path(__file__).resolve().parent.parent
+
+# ==========================================================
+# Project Folders
+# ==========================================================
+
+CONFIG_DIR = ROOT_DIR / "config"
 
 ASSETS_DIR = ROOT_DIR / "assets"
 
-DATA_DIR = ROOT_DIR / "data"
-
-DATABASE_DIR = ROOT_DIR / "storage" / "sqlite"
+MODELS_DIR = ROOT_DIR / "models"
 
 LOG_DIR = ROOT_DIR / "logs"
 
-MODELS_DIR = ROOT_DIR / "models"
-
 RESOURCES_DIR = ROOT_DIR / "resources"
 
-TEMP_DIR = ROOT_DIR / "storage" / "cache"
+# ==========================================================
+# Storage
+# ==========================================================
 
-FILES_DIR = ROOT_DIR / "storage" / "files"
+STORAGE_DIR = ROOT_DIR / "storage"
 
-PROFILES_DIR = ROOT_DIR / "storage" / "profiles"
+DATABASE_DIR = STORAGE_DIR / "sqlite"
 
-FACES_DIR = DATA_DIR / "faces"
+CACHE_DIR = STORAGE_DIR / "cache"
 
-VOICE_DIR = DATA_DIR / "voices"
+FILES_DIR = STORAGE_DIR / "files"
 
-OBJECT_DIR = DATA_DIR / "objects"
+PROFILES_DIR = STORAGE_DIR / "profiles"
 
-EVENT_DIR = DATA_DIR / "events"
+UNKNOWN_DIR = STORAGE_DIR / "unknown"
 
+VOICE_DIR = STORAGE_DIR / "voices"
 
-def create_project_directories():
+OBJECT_DIR = STORAGE_DIR / "objects"
+
+EVENT_DIR = STORAGE_DIR / "events"
+
+HISTORY_DIR = STORAGE_DIR / "history"
+
+EXPORT_DIR = STORAGE_DIR / "exports"
+
+TEMP_DIR = STORAGE_DIR / "temp"
+
+# ==========================================================
+# AI Model Directories
+# ==========================================================
+
+FACE_MODEL_DIR = MODELS_DIR / "buffalo_l"
+
+YOLO_MODEL_DIR = MODELS_DIR / "yolo"
+
+VOICE_MODEL_DIR = MODELS_DIR / "voice"
+
+EMOTION_MODEL_DIR = MODELS_DIR / "emotion"
+
+OCR_MODEL_DIR = MODELS_DIR / "ocr"
+
+# ==========================================================
+# Create Required Directories
+# ==========================================================
+
+def create_project_directories() -> None:
+    """
+    Create all required project directories.
+
+    Safe to call multiple times.
+    """
 
     directories = [
 
@@ -42,19 +84,25 @@ def create_project_directories():
 
         DATABASE_DIR,
 
-        TEMP_DIR,
+        CACHE_DIR,
 
         FILES_DIR,
 
         PROFILES_DIR,
 
-        FACES_DIR,
+        UNKNOWN_DIR,
 
         VOICE_DIR,
 
         OBJECT_DIR,
 
         EVENT_DIR,
+
+        HISTORY_DIR,
+
+        EXPORT_DIR,
+
+        TEMP_DIR,
 
         MODELS_DIR,
 

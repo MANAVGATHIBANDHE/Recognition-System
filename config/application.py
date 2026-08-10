@@ -1,22 +1,70 @@
 """
 Application Configuration
+Recognition System v2
 """
 
 from version import APP_NAME, VERSION, BUILD
 
 
 class ApplicationConfig:
-    NAME: str = APP_NAME
-    VERSION: str = VERSION
-    BUILD: str = BUILD
+    """
+    Global application configuration.
+    """
 
-    DEBUG: bool = False
+    # ==================================================
+    # APPLICATION
+    # ==================================================
 
-    COMPANY: str = "Recognition System"
-    ORGANIZATION: str = "Recognition AI"
+    NAME = APP_NAME
 
-    WINDOW_WIDTH: int = 1400
-    WINDOW_HEIGHT: int = 850
+    VERSION = VERSION
 
-    MIN_WIDTH: int = 1200
-    MIN_HEIGHT: int = 700
+    BUILD = BUILD
+
+    WINDOW_TITLE = "Recognition System v2"
+
+    COMPANY = "Recognition AI"
+
+    ORGANIZATION = "Recognition System"
+
+    DEBUG = False
+
+    RELEASE_CHANNEL = "Stable"
+
+    # ==================================================
+    # WINDOW
+    # ==================================================
+
+    WINDOW_WIDTH = 1400
+
+    WINDOW_HEIGHT = 850
+
+    MIN_WIDTH = 1280
+
+    MIN_HEIGHT = 720
+
+    # ==================================================
+    # DATABASE
+    # ==================================================
+
+    DATABASE_VERSION = 1
+
+    # ==================================================
+    # APPLICATION ICON
+    # ==================================================
+
+    ICON = "assets/icons/app.ico"
+
+    # ==================================================
+    # CACHE
+    # ==================================================
+
+    CACHE_SIZE = 500
+
+    # ==================================================
+    # LOGGING
+    # ==================================================
+
+    MAX_LOG_FILES = 10
+
+    LOG_RETENTION_DAYS = 10

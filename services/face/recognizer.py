@@ -1,9 +1,15 @@
+"""
+Face Recognizer
+Recognition System v2
+"""
+
 import numpy as np
 
 from insightface.app import FaceAnalysis
 
-from services.person.person_database import person_database
+from config.settings import Settings
 from core.logger.logger import app_logger
+from services.person.person_database import person_database
 
 
 class FaceRecognizer:
@@ -17,36 +23,75 @@ class FaceRecognizer:
 
         self.app.prepare(
             ctx_id=0,
-            det_size=(640, 640)
+            det_size=Settings.DETECTION_SIZE
         )
 
-        # person_name -> embedding ndarray
+        # person_name -> normalized embedding
         self.person_cache = {}
 
         self.reload()
 
+    # ---------------------------------------------------------
+
     def start(self):
-        app_logger.info("Face Recognizer Running")
+
+        app_logger.info(
+            "Face Recognizer Running"
+        )
+
+    # ---------------------------------------------------------
+
+    def normalize(self, embedding):
+
+        norm = np.linalg.norm(embedding)
+
+        if norm == 0:
+            return embedding
+
+        return embedding / norm
+
+    # ---------------------------------------------------------
 
     def recognize(self, frame):
 
-        faces = self.app.get(frame)
+        try:
+
+            faces = self.app.get(frame)
+
+        except Exception as e:
+
+            app_logger.exception(e)
+
+            return []
 
         from services.tracking.tracker import face_tracker
 
         for face in faces:
 
-            if hasattr(face, "embedding"):
+            if not hasattr(face, "embedding"):
+                continue
 
-                track_id = face_tracker.update(
-                    face.embedding
+            if hasattr(face, "bbox"):
+
+                bbox = tuple(
+                    int(x)
+                    for x in face.bbox
                 )
 
-                face.track_id = track_id
+            else:
+
+                bbox = (0, 0, 0, 0)
+
+            face.track_id = face_tracker.update(
+                face.embedding,
+                bbox
+            )
 
         face_tracker.cleanup()
 
         return faces
+
+    # ---------------------------------------------------------
 
     def reload(self):
 
@@ -59,30 +104,33 @@ class FaceRecognizer:
             if emb_bytes is None:
                 continue
 
-            emb = np.frombuffer(
+            embedding = np.frombuffer(
                 emb_bytes,
                 dtype=np.float32
+            ).copy()
+
+            self.person_cache[name] = self.normalize(
+                embedding
             )
-
-            emb = emb / np.linalg.norm(emb)
-
-            self.person_cache[name] = emb
 
         app_logger.success(
             f"Loaded {len(self.person_cache)} Face Profiles"
         )
 
+    # ---------------------------------------------------------
+
     def identify(self, live_embedding):
 
-        if len(self.person_cache) == 0:
+        if not self.person_cache:
+
             return "Unknown", 0.0
 
-        live_embedding = (
-            live_embedding /
-            np.linalg.norm(live_embedding)
+        live_embedding = self.normalize(
+            live_embedding
         )
 
         best_name = "Unknown"
+
         best_score = 0.0
 
         for name, db_embedding in self.person_cache.items():
@@ -97,9 +145,11 @@ class FaceRecognizer:
             if score > best_score:
 
                 best_score = score
+
                 best_name = name
 
-        if best_score >= 0.55:
+        if best_score >= Settings.RECOGNITION_THRESHOLD:
+
             return best_name, best_score
 
         return "Unknown", best_score

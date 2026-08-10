@@ -1,35 +1,53 @@
 """
 Main Window
-Recognition System
+Recognition System v2
 """
 
 import customtkinter as ctk
+
 from core.logger.logger import app_logger
+
+from ui.dialogs.person_dialog import PersonDialog
+
 from ui.widgets.dashboard import Dashboard
-from ui.widgets.camera_widget import CameraWidget
 from ui.widgets.face_gallery import FaceGallery
 from ui.widgets.unknown_faces import UnknownFaces
-from ui.dialogs.person_dialog import PersonDialog
 
 
 class MainWindow(ctk.CTk):
 
     def __init__(self):
+
         super().__init__()
 
-        self.title("Recognition System")
-        self.geometry("1200x700")
+        self.title("Recognition System v2")
+
+        self.geometry("1400x850")
+
+        self.minsize(1280, 720)
 
         ctk.set_appearance_mode("Dark")
         ctk.set_default_color_theme("blue")
 
+        self.pages = {}
+        self.nav_buttons = {}
+
+        self.protocol(
+            "WM_DELETE_WINDOW",
+            self.on_close
+        )
+
         self.build_layout()
+
+    # =========================================================
 
     def build_layout(self):
 
+        # ---------------- Sidebar ----------------
+
         self.sidebar = ctk.CTkFrame(
             self,
-            width=220,
+            width=230,
             corner_radius=0
         )
 
@@ -38,39 +56,59 @@ class MainWindow(ctk.CTk):
             fill="y"
         )
 
-        logo = ctk.CTkLabel(
+        ctk.CTkLabel(
             self.sidebar,
             text="Recognition\nSystem",
-            font=("Segoe UI", 24, "bold")
+            font=("Segoe UI", 28, "bold")
+        ).pack(
+            pady=(25, 35)
         )
 
-        logo.pack(pady=30)
+        page_names = [
 
-        buttons = [
             "Dashboard",
-            "Camera",
+
             "Registered Faces",
+
             "Today's Unknown Faces",
-            "Object",
+
+            "Attendance",
+
+            "Analytics",
+
+            "Object Detection",
+
             "Voice",
-            "OCR",
+
+            "Security",
+
             "Settings"
+
         ]
 
-        for name in buttons:
+        for page in page_names:
 
-            btn = ctk.CTkButton(
+            button = ctk.CTkButton(
+
                 self.sidebar,
-                text=name,
-                width=180,
-                command=lambda n=name: self.change_page(n)
+
+                text=page,
+
+                width=190,
+
+                command=lambda p=page: self.show_page(p)
+
             )
 
-            btn.pack(pady=8)
+            button.pack(
+                pady=6
+            )
 
-        self.content = ctk.CTkFrame(
-            self
-        )
+            self.nav_buttons[page] = button
+
+        # ---------------- Content ----------------
+
+        self.content = ctk.CTkFrame(self)
 
         self.content.pack(
             side="left",
@@ -78,104 +116,152 @@ class MainWindow(ctk.CTk):
             expand=True
         )
 
+        # =====================================================
+        # Dashboard
+        # =====================================================
+
         self.dashboard = Dashboard(self.content)
 
-        self.dashboard.pack(
-            fill="both",
-            expand=True,
-            padx=20,
-            pady=20
+        self.dashboard.place(
+            relwidth=1,
+            relheight=1
         )
 
-        self.camera_widget = CameraWidget(self.dashboard)
-        self.camera_widget.focus_set()
-
-        self.camera_widget.pack(
-            pady=20
-        )
-
-        self.register_button = ctk.CTkButton(
-            self.dashboard,
-            text="➕ Register Person",
-            width=220,
-            height=38,
+        self.dashboard.register_button.configure(
             command=self.register_face
         )
 
-        self.register_button.pack(pady=(5, 15))
+        self.pages["Dashboard"] = self.dashboard
+
+        # =====================================================
+        # Face Gallery
+        # =====================================================
 
         self.face_gallery = FaceGallery(self.content)
 
+        self.face_gallery.place(
+            relwidth=1,
+            relheight=1
+        )
+
+        self.pages["Registered Faces"] = self.face_gallery
+
+        # =====================================================
+        # Unknown Faces
+        # =====================================================
+
         self.unknown_faces = UnknownFaces(self.content)
 
-    def register_face(self):
+        self.unknown_faces.place(
+            relwidth=1,
+            relheight=1
+        )
 
-        frame = getattr(self.camera_widget, "current_frame", None)
-        face_crop = getattr(self.camera_widget, "last_face_crop", None)
-        embedding = getattr(self.camera_widget, "current_embedding", None)
+        self.pages["Today's Unknown Faces"] = self.unknown_faces
 
+        # =====================================================
+        # Placeholder Pages
+        # =====================================================
 
-        if frame is None:
-            app_logger.warning("No camera frame available.")
-            return
+        for name in [
 
-        try:
-            dialog = PersonDialog(self, face_image=face_crop, embedding=embedding)
+            "Attendance",
 
-            self.wait_window(dialog)
+            "Analytics",
 
-            self.face_gallery.refresh()
+            "Object Detection",
 
-        except Exception as e:
-            app_logger.exception(e)
+            "Voice",
 
-    def change_page(self, page):
+            "Security",
 
-        self.dashboard.pack_forget()
-        self.face_gallery.pack_forget()
-        self.unknown_faces.pack_forget()
+            "Settings"
 
-        if page == "Dashboard":
+        ]:
 
-            self.dashboard.pack(
-                fill="both",
-                expand=True,
-                padx=20,
-                pady=20
+            frame = ctk.CTkFrame(self.content)
+
+            frame.place(
+                relwidth=1,
+                relheight=1
             )
 
-        elif page == "Registered Faces":
+            ctk.CTkLabel(
+
+                frame,
+
+                text=f"{name}\nComing Soon",
+
+                font=("Segoe UI", 30, "bold")
+
+            ).pack(expand=True)
+
+            self.pages[name] = frame
+
+        self.show_page("Dashboard")
+
+    # =========================================================
+
+    def show_page(self, page):
+
+        for frame in self.pages.values():
+
+            frame.lower()
+
+        self.pages[page].lift()
+
+        for button in self.nav_buttons.values():
+
+            button.configure(
+                fg_color=("gray75", "#3B8ED0")
+            )
+
+        self.nav_buttons[page].configure(
+            fg_color="#2563EB"
+        )
+
+        if page == "Registered Faces":
 
             self.face_gallery.refresh()
-
-            self.face_gallery.pack(
-                fill="both",
-                expand=True,
-                padx=20,
-                pady=20
-            )
 
         elif page == "Today's Unknown Faces":
 
             self.unknown_faces.refresh()
 
-            self.unknown_faces.pack(
-                fill="both",
-                expand=True,
-                padx=20,
-                pady=20
+    # =========================================================
+
+    def register_face(self):
+
+        frame = self.dashboard.camera_widget.current_frame
+
+        face = self.dashboard.camera_widget.last_face_crop
+
+        embedding = self.dashboard.camera_widget.current_embedding
+
+        if frame is None:
+
+            app_logger.warning(
+                "Camera frame unavailable."
             )
 
-        else:
+            return
 
-            self.dashboard.pack(
-                fill="both",
-                expand=True,
-                padx=20,
-                pady=20
-            )
+        dialog = PersonDialog(
 
+            self,
 
-    def refresh_gallery(self):
+            face_image=face,
+
+            embedding=embedding
+
+        )
+
+        self.wait_window(dialog)
 
         self.face_gallery.refresh()
+
+    # =========================================================
+
+    def on_close(self):
+
+        self.destroy()

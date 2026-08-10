@@ -34,49 +34,44 @@ recognition_system
 │   ├── application.py
 │   ├── paths.py
 │   ├── settings.py
-│   └── __init__.py
+│   ├── __init__.py
+│   └── __pycache__
+│       ├── application.cpython-312.pyc
+│       ├── paths.cpython-312.pyc
+│       ├── settings.cpython-312.pyc
+│       └── __init__.cpython-312.pyc
 ├── core
 │   ├── base_service.py
 │   ├── camera
-│   │   └── camera.py
+│   │   ├── camera.py
+│   │   └── __pycache__
+│   │       └── camera.cpython-312.pyc
 │   ├── logger
 │   │   ├── logger.py
-│   │   └── __init__.py
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   │       ├── logger.cpython-312.pyc
+│   │       └── __init__.cpython-312.pyc
 │   ├── service_manager.py
-│   └── __init__.py
+│   ├── __init__.py
+│   └── __pycache__
+│       ├── base_service.cpython-312.pyc
+│       ├── service_manager.cpython-312.pyc
+│       └── __init__.cpython-312.pyc
 ├── data
 │   ├── embeddings
 │   ├── events
 │   │   └── .gitkeep
 │   ├── faces
-│   │   ├── .gitkeep
-│   │   ├── 0c793ed3-55d2-472c-bfae-f268449b97c5.jpg
-│   │   ├── 0eb8c5be-bd5b-4021-be7a-855b34b5ce76.jpg
-│   │   ├── 20d0fbec-9ce3-409c-8a27-b9866adee82b.jpg
-│   │   ├── 2a3812c3-d574-43c0-a64a-d716fcf36267.jpg
-│   │   ├── 2c4560be-db63-436a-847f-6abf575515a0.jpg
-│   │   ├── 372ee90b-84f1-40a0-ab81-5059a0ab9154.jpg
-│   │   ├── 4523ab92-b905-4df0-aa3d-a8e0d2564af9.jpg
-│   │   ├── 45883ced-b08a-436a-83cf-c3827bcf3780.jpg
-│   │   ├── 464778de-6149-4336-8079-f807e22d9586.jpg
-│   │   ├── 55ffb72d-44e3-445a-9f35-5f5e86d4a73f.jpg
-│   │   ├── 5d460fa6-a80b-460c-a8e6-58d93f30e812.jpg
-│   │   ├── 635d5568-d2a0-4ced-b1d0-c62e4a792fbf.jpg
-│   │   ├── 6533a626-4ddf-471a-8f0b-5dd2a6ee00d7.jpg
-│   │   ├── 6e829f46-733b-420d-8c6d-60e6607f8ff9.jpg
-│   │   ├── 73c1667b-77ba-4014-85d0-1b670d141d3f.jpg
-│   │   ├── 82f8e11b-3d1e-4f4a-8491-fb43151e231e.jpg
-│   │   ├── 9bb311ba-1df5-41ed-9715-9e5cfc845962.jpg
-│   │   ├── ad48a755-72ed-4e34-ac1e-1f82d653718a.jpg
-│   │   ├── b03cad26-fa46-4f9f-9c8a-73c70a0b5a94.jpg
-│   │   ├── bcc4c1a4-3f9f-4cc1-a9a3-b168979586fd.jpg
-│   │   └── e536dda8-e491-4bd8-b53d-c91f057a8a30.jpg
+│   │   └── .gitkeep
 │   ├── objects
 │   │   └── .gitkeep
 │   └── voices
 │       └── .gitkeep
 ├── database
-│   └── database.py
+│   ├── database.py
+│   └── __pycache__
+│       └── database.cpython-312.pyc
 ├── docs
 │   ├── API.md
 │   ├── Architecture.md
@@ -91,7 +86,6 @@ recognition_system
 ├── memory
 │   └── __init__.py
 ├── models
-│   ├── buffalo_l
 │   ├── face
 │   │   └── .gitkeep
 │   ├── models
@@ -121,7 +115,6 @@ recognition_system
 │   ├── vision
 │   │   └── __init__.py
 │   └── __init__.py
-├── project_tree.txt
 ├── README.md
 ├── requirements.txt
 ├── resources
@@ -144,7 +137,11 @@ recognition_system
 │   ├── camera
 │   │   ├── manager.py
 │   │   ├── service.py
-│   │   └── __init__.py
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   │       ├── manager.cpython-312.pyc
+│   │       ├── service.cpython-312.pyc
+│   │       └── __init__.cpython-312.pyc
 │   ├── database
 │   │   ├── manager.py
 │   │   ├── service.py
@@ -153,11 +150,22 @@ recognition_system
 │   │   ├── recognizer.py
 │   │   ├── service.py
 │   │   ├── yunet_detector.py
-│   │   └── __init__.py
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   │       ├── recognizer.cpython-312.pyc
+│   │       ├── service.cpython-312.pyc
+│   │       ├── yunet_detector.cpython-312.pyc
+│   │       └── __init__.cpython-312.pyc
 │   ├── image
 │   │   ├── face_cropper.py
 │   │   ├── image_service.py
-│   │   └── __init__.py
+│   │   ├── unknown_face_storage.py
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   │       ├── face_cropper.cpython-312.pyc
+│   │       ├── image_service.cpython-312.pyc
+│   │       ├── unknown_face_storage.cpython-312.pyc
+│   │       └── __init__.cpython-312.pyc
 │   ├── object
 │   │   ├── manager.py
 │   │   ├── service.py
@@ -165,19 +173,45 @@ recognition_system
 │   ├── person
 │   │   ├── person_database.py
 │   │   ├── person_service.py
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   │       ├── person_database.cpython-312.pyc
+│   │       ├── person_service.cpython-312.pyc
+│   │       └── __init__.cpython-312.pyc
+│   ├── recognition_cache
+│   │   ├── recognition_cache.py
 │   │   └── __init__.py
 │   ├── settings
 │   │   ├── manager.py
 │   │   ├── service.py
 │   │   └── __init__.py
+│   ├── tracking
+│   │   ├── tracker.py
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   │       ├── tracker.cpython-312.pyc
+│   │       └── __init__.cpython-312.pyc
+│   ├── unknown_queue
+│   │   ├── queue_database.py
+│   │   ├── queue_service.py
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   │       ├── queue_database.cpython-312.pyc
+│   │       ├── queue_service.cpython-312.pyc
+│   │       └── __init__.cpython-312.pyc
 │   ├── voice
 │   │   ├── manager.py
 │   │   ├── service.py
 │   │   └── __init__.py
 │   ├── watcher
 │   │   ├── unknown_watcher.py
-│   │   └── __init__.py
-│   └── __init__.py
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   │       ├── unknown_watcher.cpython-312.pyc
+│   │       └── __init__.cpython-312.pyc
+│   ├── __init__.py
+│   └── __pycache__
+│       └── __init__.cpython-312.pyc
 ├── shared
 │   ├── constants.py
 │   ├── enums.py
@@ -187,7 +221,6 @@ recognition_system
 │   └── __init__.py
 ├── storage
 │   ├── cache
-│   │   └── .gitkeep
 │   ├── embeddings
 │   ├── files
 │   │   └── .gitkeep
@@ -195,23 +228,28 @@ recognition_system
 │   ├── photos
 │   ├── profiles
 │   │   ├── .gitkeep
-│   │   ├── 02811383-b5d4-4658-a7b8-aae394a1a77a.png
-│   │   ├── 12d0925a-b4ac-41a1-af50-0651cf8fe11d.png
-│   │   ├── 1a0dbf86-71d0-4867-9da1-6c8e14e31920.png
-│   │   ├── 2bc521bc-413c-49f6-980d-a5e6f010471d.png
-│   │   ├── 412a566b-ee4c-4562-970a-226a8060a04c.png
-│   │   ├── 417a128e-7292-4486-9235-f29bbcdc8b19.png
-│   │   ├── 537af64f-c2c7-489d-b6d1-21f1f3a6707c.png
-│   │   ├── 58fbd942-d6f2-4433-9c12-3e458805e5fd.png
-│   │   ├── 74a5c34d-cc31-4c6e-9030-4e7d0fafcbcc.png
-│   │   ├── 97181fec-12d7-482d-a20c-73adaf7d4a76.png
-│   │   ├── af78f251-3185-49f3-9267-671b1a6dba26.png
-│   │   ├── b0fbb4d5-06d4-42cc-8f79-e7e37bb51ef8.png
-│   │   ├── c0c640ea-ff62-4333-9aed-93934015369d.png
-│   │   └── f8fd51f5-accf-4e9b-8ebf-a395cabacef4.png
-│   └── sqlite
+│   │   ├── 054b9c0b-3c4e-439e-bf96-311835ee35d5.png
+│   │   ├── 4526d64e-2a4a-4a36-86f9-62fc6351adc5.png
+│   │   ├── bfdd4d58-abf2-4e11-af88-7d8c8086bb2d.png
+│   │   ├── ec4681d9-01c1-42e6-85b6-82f0541e7091.png
+│   │   └── fa11e423-3654-4505-b982-922f5571404e.png
+│   ├── sqlite
+│   │   ├── .gitkeep
+│   │   └── recognition_system.db
+│   └── unknown_faces
 │       ├── .gitkeep
-│       └── recognition_system.db
+│       ├── 0ecef822-7e7a-4e59-8431-ecb0f40fe902.png
+│       ├── 1e6fae7b-1715-49d2-bb28-edab69249a18.png
+│       ├── 23207fb9-ad07-454b-a396-386062cb2416.png
+│       ├── 43f25697-2117-4a02-8518-21d94f02e92d.png
+│       ├── 4fb5cc68-a0c7-4757-bf98-a77ef47ae2b5.png
+│       ├── 5e14d312-713b-4b4c-a3e2-deda5c14974d.png
+│       ├── 84b34ff8-90f7-414e-8a58-a5f94b390c78.png
+│       ├── a377d222-401f-49cc-b5b7-0f7d0cd9ba40.png
+│       ├── a6c53492-b5e2-4886-965e-48a5a55103d6.png
+│       ├── ea2da9d8-586b-422c-b76d-a3441e5aa6d9.png
+│       ├── f6d9e57d-9bfc-4acd-9f1d-042aaf4f1291.png
+│       └── fb2619b2-6b68-4d4a-9366-4bc17bbc8875.png
 ├── tests
 │   ├── test_camera.py
 │   ├── test_database.py
@@ -222,28 +260,52 @@ recognition_system
 │   ├── dialogs
 │   │   ├── person_dialog.py
 │   │   ├── unknown_person_dialog.py
-│   │   └── __init__.py
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   │       ├── person_dialog.cpython-312.pyc
+│   │       ├── unknown_person_dialog.cpython-312.pyc
+│   │       └── __init__.cpython-312.pyc
 │   ├── themes
 │   │   ├── theme_manager.py
-│   │   └── __init__.py
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   │       ├── theme_manager.cpython-312.pyc
+│   │       └── __init__.cpython-312.pyc
 │   ├── widgets
 │   │   ├── camera_widget.py
 │   │   ├── dashboard.py
 │   │   ├── face_gallery
 │   │   ├── face_gallery.py
-│   │   └── __init__.py
+│   │   ├── unknown_faces
+│   │   ├── unknown_faces.py
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   │       ├── camera_widget.cpython-312.pyc
+│   │       ├── dashboard.cpython-312.pyc
+│   │       ├── face_gallery.cpython-312.pyc
+│   │       ├── unknown_faces.cpython-312.pyc
+│   │       └── __init__.cpython-312.pyc
 │   ├── windows
 │   │   ├── main_window.py
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   │       ├── main_window.cpython-312.pyc
+│   │       └── __init__.cpython-312.pyc
+│   ├── __init__.py
+│   └── __pycache__
+│       └── __init__.cpython-312.pyc
+├── version.py
+├── vision
+│   ├── face
+│   │   └── __init__.py
+│   ├── gesture
+│   │   └── __init__.py
+│   ├── object
+│   │   └── __init__.py
+│   ├── ocr
 │   │   └── __init__.py
 │   └── __init__.py
-├── version.py
-└── vision
-    ├── face
-    │   └── __init__.py
-    ├── gesture
-    │   └── __init__.py
-    ├── object
-    │   └── __init__.py
-    ├── ocr
-    │   └── __init__.py
-    └── __init__.py
+└── __pycache__
+    ├── app.cpython-312.pyc
+    ├── application.cpython-312.pyc
+    └── version.cpython-312.pyc

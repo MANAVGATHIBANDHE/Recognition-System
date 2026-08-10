@@ -1,5 +1,12 @@
-import customtkinter as ctk
+"""
+Camera Widget
+Recognition System v2
+"""
+
+import time
+
 import cv2
+import customtkinter as ctk
 from PIL import Image
 
 from services.camera.manager import camera_service
@@ -8,122 +15,221 @@ from services.image.face_cropper import FaceCropper
 from services.unknown_queue.queue_service import unknown_queue
 
 
-
 class CameraWidget(ctk.CTkLabel):
 
     def __init__(self, parent):
+
         super().__init__(parent, text="")
 
         self.current_frame = None
         self.current_embedding = None
+        self.last_face_crop = None
+
+        self.fps = 0
+        self.frame_counter = 0
+        self.last_time = time.time()
 
         self.after(30, self.update_frame)
+
+    # =======================================================
+    # Main Loop
+    # =======================================================
 
     def update_frame(self):
 
         if not self.winfo_exists():
             return
 
-        if camera_service.camera.cap is not None:
+        try:
+
+            if camera_service.camera.cap is None:
+                self.after(100, self.update_frame)
+                return
 
             ok, frame = camera_service.camera.read()
 
-            if ok:
-                self.current_frame = frame.copy()
+            if not ok or frame is None:
+                self.after(30, self.update_frame)
+                return
+
+            self.current_frame = frame.copy()
+
+            # ------------------------------------------
+            # Improve dark images
+            # ------------------------------------------
 
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-            brightness = gray.mean()
+            if gray.mean() < 60:
 
-            if brightness < 60:
-                frame = cv2.convertScaleAbs(frame, alpha=1.5, beta=40)
+                frame = cv2.convertScaleAbs(
+                    frame,
+                    alpha=1.4,
+                    beta=35
+                )
 
-            faces = face_ai.detector.detect(frame)
-            self.last_face_crop = None
+            # ------------------------------------------
+            # Face Detection
+            # ------------------------------------------
 
-            results = face_ai.recognizer.recognize(frame)
+            detections = face_ai.detector.detect(frame)
+
+            recognitions = face_ai.recognizer.recognize(frame)
 
             self.current_embedding = None
+            self.last_face_crop = None
 
-            if len(results):
-                self.current_embedding = results[0].embedding
-            else:
-                self.current_embedding = None
+            if recognitions:
+                self.current_embedding = recognitions[0].embedding
 
-            if faces is not None:
+            if detections is not None:
 
-                for index, face in enumerate(faces):
+                for index, det in enumerate(detections):
+
+                    x, y, w, h = det[:4].astype(int)
+
+                    embedding = None
+                    name = "Unknown"
+                    score = 0.0
+                    track_id = 0
+
                     self.last_face_crop = FaceCropper.crop(
                         frame,
-                        face
+                        det
                     )
 
-                    if index < len(results):
+                    if index < len(recognitions):
 
-                        embedding = results[index].embedding
+                        result = recognitions[index]
+
+                        embedding = result.embedding
 
                         track_id = getattr(
-                            face,
+                            result,
                             "track_id",
                             0
                         )
 
-                        name, score = face_ai.recognizer.identify(
-                            embedding
+                        name, score = (
+                            face_ai.recognizer.identify(
+                                embedding
+                            )
                         )
 
-                    else:
+                        dashboard = self.master
 
-                        name = "Unknown"
-                        score = 0
+                        if hasattr(
+                            dashboard,
+                            "set_recognition"
+                        ):
 
+                            dashboard.set_recognition(
+                                name,
+                                score
+                            )
+
+                    # -------------------------
+                    # Unknown Queue
+                    # -------------------------
 
                     if (
                         name == "Unknown"
-                        and self.last_face_crop is not None
                         and embedding is not None
+                        and self.last_face_crop is not None
                     ):
+
                         unknown_queue.add(
-                            image=self.last_face_crop,
-                            embedding=embedding
+                            self.last_face_crop,
+                            embedding
                         )
 
-
-                    x, y, w, h = face[:4].astype(int)
+                    color = (
+                        (0, 255, 0)
+                        if name != "Unknown"
+                        else (0, 165, 255)
+                    )
 
                     cv2.rectangle(
                         frame,
                         (x, y),
                         (x + w, y + h),
-                        (0, 255, 0),
+                        color,
                         2
                     )
 
                     cv2.putText(
                         frame,
-                        f"ID ({track_id} | {name})  {score:.2f}",
+                        f"#{track_id} {name} ({score:.2f})",
                         (x, y - 10),
                         cv2.FONT_HERSHEY_SIMPLEX,
-                        0.7,
-                        (0, 255, 0),
+                        0.65,
+                        color,
                         2
                     )
 
-            if ok:
+            # ------------------------------------------
+            # FPS
+            # ------------------------------------------
 
-                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            self.frame_counter += 1
 
-                image = Image.fromarray(frame)
+            now = time.time()
 
-                image = image.resize((800, 450))
+            if now - self.last_time >= 1:
 
-                self.camera_image = ctk.CTkImage(
-                    light_image=image,
-                    dark_image=image,
-                    size=(800, 450)
-                )
+                self.fps = self.frame_counter
 
-                self.configure(image=self.camera_image)
+                dashboard = self.master
 
-        if self.winfo_exists():
-            self.after(30, self.update_frame)
+                if hasattr(
+                    dashboard,
+                    "set_fps"
+                ):
+                    dashboard.set_fps(self.fps)
+
+                self.frame_counter = 0
+                self.last_time = now
+
+            cv2.putText(
+                frame,
+                f"FPS : {self.fps}",
+                (15, 30),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.75,
+                (0, 255, 255),
+                2
+            )
+
+            # ------------------------------------------
+            # Display
+            # ------------------------------------------
+
+            rgb = cv2.cvtColor(
+                frame,
+                cv2.COLOR_BGR2RGB
+            )
+
+            image = Image.fromarray(rgb)
+
+            image = image.resize(
+                (800, 450)
+            )
+
+            self.camera_image = ctk.CTkImage(
+                light_image=image,
+                dark_image=image,
+                size=(800, 450)
+            )
+
+            self.configure(
+                image=self.camera_image
+            )
+
+        except Exception as error:
+
+            print(error)
+
+        self.after(
+            30,
+            self.update_frame
+        )
